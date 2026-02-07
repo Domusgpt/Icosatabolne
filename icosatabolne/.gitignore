@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+icosatabolne/cpp/_deps
+icosatabolne/cpp/build
+icosatabolne/cpp/CMakeFiles

@@ -1,0 +1,5 @@
+if(EXISTS "/app/icosatabolne/cpp/math_tests[1]_tests.cmake")
+  include("/app/icosatabolne/cpp/math_tests[1]_tests.cmake")
+else()
+  add_test(math_tests_NOT_BUILT math_tests_NOT_BUILT)
+endif()

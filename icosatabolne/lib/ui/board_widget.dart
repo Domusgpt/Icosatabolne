@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/game/hex_grid.dart';
 import 'package:icosatabolne/game/game_controller.dart';
+import 'package:icosatabolne/logic/sound_haptics_manager.dart';
 import 'package:icosatabolne/ui/marble_widget.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,7 @@ class BoardWidget extends StatefulWidget {
 }
 
 class _BoardWidgetState extends State<BoardWidget> {
+  final SoundHapticsManager _haptics = SoundHapticsManager();
   List<Hex> _selection = [];
   late double _hexSize;
   late Offset _center;
@@ -143,7 +145,7 @@ class _BoardWidgetState extends State<BoardWidget> {
           }
         }
       });
-      HapticFeedback.selectionClick();
+      _haptics.playSelectionEffect();
     } else {
       // Tap empty/opponent: Clear selection
       if (_selection.isNotEmpty) {
@@ -209,10 +211,10 @@ class _BoardWidgetState extends State<BoardWidget> {
         // Make move
         bool success = controller.makeMove(_selection, dir);
         if (success) {
-           HapticFeedback.heavyImpact();
+           // Controller handles success haptics
            setState(() => _selection.clear());
         } else {
-           HapticFeedback.vibrate(); // Error
+           // Controller handles error haptics
         }
       }
     }

@@ -1,9 +1,11 @@
 import 'package:flutter/foundation.dart';
+import 'package:icosatabolne/logic/sound_haptics_manager.dart';
 import 'board_state.dart';
 import 'hex_grid.dart';
 import 'rules.dart';
 
 class GameController extends ChangeNotifier {
+  final SoundHapticsManager _haptics = SoundHapticsManager();
   BoardState _board;
   Player _currentTurn;
   int _turnCount;
@@ -48,6 +50,7 @@ class GameController extends ChangeNotifier {
   bool makeMove(List<Hex> selection, HexDirection direction) {
     if (isGameOver) {
       _lastError = "Game Over";
+      _haptics.playErrorEffect();
       notifyListeners();
       return false;
     }
@@ -56,6 +59,7 @@ class GameController extends ChangeNotifier {
 
     if (!result.isValid) {
       _lastError = result.error;
+      _haptics.playErrorEffect();
       notifyListeners();
       return false;
     }
@@ -94,10 +98,23 @@ class GameController extends ChangeNotifier {
       }
     }
 
+    // Play appropriate haptic effect
+    if (result.eliminatedMarble != null) {
+      _haptics.playCaptureEffect();
+    } else if (result.pushedMarbles.isNotEmpty) {
+      _haptics.playPushEffect();
+    } else {
+      _haptics.playMoveEffect();
+    }
+
     _board = BoardState(pieces: newPieces, radius: _board.radius);
     _currentTurn = (mover == Player.holographic) ? Player.quantum : Player.holographic;
     _turnCount++;
     _lastError = null;
+
+    if (isGameOver) {
+      _haptics.playWinEffect();
+    }
 
     notifyListeners();
     return true;

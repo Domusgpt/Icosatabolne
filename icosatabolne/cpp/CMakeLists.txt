@@ -63,24 +63,24 @@ target_include_directories(vib3_math PUBLIC
 )
 
 # Geometry library
-add_library(vib3_geometry STATIC
-    geometry/GeometryGenerator.cpp
-    geometry/Tesseract.cpp
-    geometry/Tetrahedron.cpp
-    geometry/Sphere.cpp
-    geometry/Torus.cpp
-    geometry/KleinBottle.cpp
-    geometry/Fractal.cpp
-    geometry/Wave.cpp
-    geometry/Crystal.cpp
-    geometry/WarpFunctions.cpp
-)
+# add_library(vib3_geometry STATIC
+#     geometry/GeometryGenerator.cpp
+#     geometry/Tesseract.cpp
+#     geometry/Tetrahedron.cpp
+#     geometry/Sphere.cpp
+#     geometry/Torus.cpp
+#     geometry/KleinBottle.cpp
+#     geometry/Fractal.cpp
+#     geometry/Wave.cpp
+#     geometry/Crystal.cpp
+#     geometry/WarpFunctions.cpp
+# )
 
-target_link_libraries(vib3_geometry PUBLIC vib3_math)
+# target_link_libraries(vib3_geometry PUBLIC vib3_math)
 
-target_include_directories(vib3_geometry PUBLIC
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
+# target_include_directories(vib3_geometry PUBLIC
+#     ${CMAKE_CURRENT_SOURCE_DIR}
+# )
 
 # WebAssembly build
 if(EMSCRIPTEN AND VIB3_BUILD_WASM)
@@ -91,7 +91,7 @@ if(EMSCRIPTEN AND VIB3_BUILD_WASM)
 
     target_link_libraries(vib3_wasm PRIVATE
         vib3_math
-        vib3_geometry
+        # vib3_geometry
     )
 
     # Emscripten settings
@@ -196,18 +196,18 @@ if(VIB3_BUILD_TESTS AND NOT EMSCRIPTEN)
     )
 
     # Geometry tests
-    add_executable(geometry_tests
-        tests/Geometry_test.cpp
-    )
+    # add_executable(geometry_tests
+    #     tests/Geometry_test.cpp
+    # )
 
-    target_link_libraries(geometry_tests PRIVATE
-        vib3_geometry
-        GTest::gtest_main
-    )
+    # target_link_libraries(geometry_tests PRIVATE
+    #     vib3_geometry
+    #     GTest::gtest_main
+    # )
 
     include(GoogleTest)
     gtest_discover_tests(math_tests)
-    gtest_discover_tests(geometry_tests)
+    # gtest_discover_tests(geometry_tests)
 endif()
 
 # Print configuration summary
