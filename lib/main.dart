@@ -5,13 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vib3_flutter/vib3_flutter.dart';
 
+import 'game_logic.dart';
+
 void main() {
   runApp(const AbaloneVib3App());
 }
-
-enum PlayerSide { holographic, quantum }
-
-enum MarbleState { empty, holographic, quantum }
 
 class AbaloneVib3App extends StatelessWidget {
   const AbaloneVib3App({super.key});
@@ -40,7 +38,7 @@ class AbaloneHome extends StatefulWidget {
 
 class _AbaloneHomeState extends State<AbaloneHome>
     with TickerProviderStateMixin {
-  final _gameState = GameState.initial();
+  late GameState _gameState;
   late final AnimationController _pulseController;
   late final Vib3Engine _holoEngine;
   late final Vib3Engine _quantumEngine;
@@ -50,6 +48,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
   @override
   void initState() {
     super.initState();
+    _gameState = GameState.initial();
     _pulseController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 2100),
@@ -107,8 +106,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
 
   void _onTap(BoardSlot slot) {
     setState(() {
-      _gameState.toggleSlot(slot);
-      _gameState.advanceTurn();
+      _gameState.handleTap(slot.coordinate);
     });
 
     final hapticStrength = _gameState.currentPlayer == PlayerSide.holographic
@@ -153,6 +151,9 @@ class _AbaloneHomeState extends State<AbaloneHome>
   @override
   Widget build(BuildContext context) {
     final boardState = _gameState;
+    // Generate slots from board for UI
+    final slots = boardState.getSlots();
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
@@ -162,8 +163,8 @@ class _AbaloneHomeState extends State<AbaloneHome>
               children: [
                 HeaderPanel(
                   currentPlayer: boardState.currentPlayer,
-                  holoScore: boardState.holoCount,
-                  quantumScore: boardState.quantumCount,
+                  holoScore: boardState.holoCaptured,
+                  quantumScore: boardState.quantumCaptured,
                 ),
                 Expanded(
                   child: Row(
@@ -186,10 +187,11 @@ class _AbaloneHomeState extends State<AbaloneHome>
                       Expanded(
                         flex: 2,
                         child: BoardPanel(
-                          slots: boardState.slots,
+                          slots: slots,
                           onTap: _onTap,
                           pulse: _pulseController,
                           activePlayer: boardState.currentPlayer,
+                          selection: boardState.selection,
                         ),
                       ),
                       Expanded(
@@ -212,8 +214,8 @@ class _AbaloneHomeState extends State<AbaloneHome>
                 ),
                 FooterPanel(
                   activePlayer: boardState.currentPlayer,
-                  holoCount: boardState.holoCount,
-                  quantumCount: boardState.quantumCount,
+                  holoCaptured: boardState.holoCaptured,
+                  quantumCaptured: boardState.quantumCaptured,
                 ),
               ],
             ),
@@ -349,12 +351,14 @@ class BoardPanel extends StatelessWidget {
     required this.onTap,
     required this.pulse,
     required this.activePlayer,
+    required this.selection,
   });
 
   final List<BoardSlot> slots;
   final ValueChanged<BoardSlot> onTap;
   final Animation<double> pulse;
   final PlayerSide activePlayer;
+  final List<HexCoordinate> selection;
 
   @override
   Widget build(BuildContext context) {
@@ -392,16 +396,24 @@ class BoardPanel extends StatelessWidget {
                     painter: BoardGlowPainter(pulse.value),
                   ),
                   ...slots.map(
-                    (slot) => Positioned(
-                      left: slot.position.dx,
-                      top: slot.position.dy,
-                      child: MarbleWidget(
-                        slot: slot,
-                        pulse: pulse.value,
-                        onTap: () => onTap(slot),
-                        isActive: slot.owner == activePlayer,
-                      ),
-                    ),
+                    (slot) {
+                      final isSelected = selection.contains(slot.coordinate);
+                      return Positioned(
+                        left: slot.position.dx,
+                        top: slot.position.dy,
+                        child: MarbleWidget(
+                          slot: slot,
+                          pulse: pulse.value,
+                          onTap: () => onTap(slot),
+                          isActive: slot.owner ==
+                                  (activePlayer == PlayerSide.holographic
+                                      ? MarbleState.holographic
+                                      : MarbleState.quantum) ||
+                              isSelected,
+                          isSelected: isSelected,
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -420,12 +432,14 @@ class MarbleWidget extends StatelessWidget {
     required this.pulse,
     required this.onTap,
     required this.isActive,
+    this.isSelected = false,
   });
 
   final BoardSlot slot;
   final double pulse;
   final VoidCallback onTap;
   final bool isActive;
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -448,11 +462,14 @@ class MarbleWidget extends StatelessWidget {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: glow.withOpacity(isActive ? 0.9 : 0.5),
-              blurRadius: isActive ? 18 + pulse * 10 : 12,
+              color: glow.withOpacity((isActive || isSelected) ? 0.9 : 0.5),
+              blurRadius: (isActive || isSelected) ? 18 + pulse * 10 : 12,
               offset: const Offset(0, 6),
             ),
           ],
+          border: isSelected
+              ? Border.all(color: Colors.white, width: 2)
+              : null,
         ),
         child: ClipOval(
           child: Stack(
@@ -501,6 +518,9 @@ class MarbleWidget extends StatelessWidget {
     );
   }
 }
+
+// ... VisualizerPanel, ShaderStats, PlaceholderShader, FooterPanel ...
+// (I will retain these as they are good visual scaffolding, but updating FooterPanel)
 
 class VisualizerPanel extends StatelessWidget {
   const VisualizerPanel({
@@ -682,13 +702,13 @@ class FooterPanel extends StatelessWidget {
   const FooterPanel({
     super.key,
     required this.activePlayer,
-    required this.holoCount,
-    required this.quantumCount,
+    required this.holoCaptured,
+    required this.quantumCaptured,
   });
 
   final PlayerSide activePlayer;
-  final int holoCount;
-  final int quantumCount;
+  final int holoCaptured;
+  final int quantumCaptured;
 
   @override
   Widget build(BuildContext context) {
@@ -712,7 +732,7 @@ class FooterPanel extends StatelessWidget {
               ),
             ),
             Text(
-              'H:$holoCount  Q:$quantumCount',
+              'Captured -> H:$holoCaptured  Q:$quantumCaptured',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.white70,
                     fontWeight: FontWeight.w600,
@@ -823,6 +843,8 @@ class ChromaticAberrationOverlay extends StatelessWidget {
     );
   }
 }
+
+// ... BoardGlowPainter, VaporwaveGridPainter ... (Standard painters)
 
 class BoardGlowPainter extends CustomPainter {
   BoardGlowPainter(this.pulse);
@@ -993,80 +1015,130 @@ class MarbleShaderPainter extends CustomPainter {
 }
 
 class GameState {
+  final Board board;
+  PlayerSide currentPlayer;
+  List<HexCoordinate> selection = [];
+
+  // Forward to board properties for convenience
+  int get holoCaptured => board.holoCaptured;
+  int get quantumCaptured => board.quantumCaptured;
+
   GameState({
-    required this.slots,
+    required this.board,
     required this.currentPlayer,
-    required this.holoCount,
-    required this.quantumCount,
   });
 
-  final List<BoardSlot> slots;
-  PlayerSide currentPlayer;
-  int holoCount;
-  int quantumCount;
-
   static GameState initial() {
+    return GameState(
+      board: Board(),
+      currentPlayer: PlayerSide.holographic,
+    );
+  }
+
+  List<BoardSlot> getSlots() {
     final slots = <BoardSlot>[];
-    const rowCounts = [5, 6, 7, 8, 9, 8, 7, 6, 5];
     const startX = 24.0;
     const startY = 40.0;
     const spacing = 54.0;
     var seedIndex = 0;
 
-    for (var row = 0; row < rowCounts.length; row++) {
-      final count = rowCounts[row];
+    for (var row = 0; row < 9; row++) {
+      int z = row - 4;
+      int count = 9 - z.abs();
+      int firstX = max(-4, -4 - z);
+
       final offsetX = (9 - count) * 0.5 * spacing;
+
       for (var col = 0; col < count; col++) {
         final dx = startX + offsetX + col * spacing;
         final dy = startY + row * spacing * 0.92;
-        MarbleState owner;
-        if (row < 2) {
-          owner = MarbleState.holographic;
-        } else if (row > 6) {
-          owner = MarbleState.quantum;
-        } else {
-          owner = MarbleState.empty;
-        }
+
+        int x = firstX + col;
+        int y = -x - z;
+        var coord = HexCoordinate(x, y, z);
+
+        var owner = board.get(coord) ?? MarbleState.empty;
+
         slots.add(BoardSlot(
           row: row,
           column: col,
           position: Offset(dx, dy),
           owner: owner,
           seed: seedIndex * 0.37,
+          coordinate: coord,
         ));
         seedIndex++;
       }
     }
-
-    return GameState(
-      slots: slots,
-      currentPlayer: PlayerSide.holographic,
-      holoCount: slots.where((slot) => slot.owner == MarbleState.holographic).length,
-      quantumCount: slots.where((slot) => slot.owner == MarbleState.quantum).length,
-    );
+    return slots;
   }
 
-  void toggleSlot(BoardSlot slot) {
-    final index = slots.indexOf(slot);
-    if (index == -1) return;
+  void handleTap(HexCoordinate coord) {
+    var marble = board.get(coord) ?? MarbleState.empty;
+    var isCurrentPlayerMarble =
+        (currentPlayer == PlayerSide.holographic && marble == MarbleState.holographic) ||
+        (currentPlayer == PlayerSide.quantum && marble == MarbleState.quantum);
 
-    final current = slots[index];
-    MarbleState next;
-    if (current.owner == MarbleState.empty) {
-      next = currentPlayer == PlayerSide.holographic
-          ? MarbleState.holographic
-          : MarbleState.quantum;
-    } else if (current.owner == MarbleState.holographic) {
-      next = MarbleState.quantum;
+    if (isCurrentPlayerMarble) {
+      if (selection.contains(coord)) {
+        // Toggle off
+        selection.remove(coord);
+      } else {
+        // Add to selection if inline
+        // If selection is empty, just add
+        // If selection not empty, check validator logic?
+        // MoveValidator handles "validateSelection".
+        // We can just add and see if it is valid.
+
+        List<HexCoordinate> nextSelection = List.from(selection)..add(coord);
+        MoveValidator validator = MoveValidator(board);
+
+        // Sorting might be needed for validateSelection?
+        // Validator handles unordered but let's check.
+        // My validator assumed simple adjacency checks.
+
+        if (validator.validateSelection(nextSelection, currentPlayer)) {
+          selection.add(coord);
+        } else {
+          // If invalid (e.g. not inline), maybe user wants to start new selection?
+          // If I tap a marble far away, I probably want to select THAT one.
+          selection = [coord];
+        }
+      }
     } else {
-      next = MarbleState.empty;
-    }
+      // Tapped empty or opponent -> potential move target
+      if (selection.isNotEmpty) {
+        // Try to move
+        // Determine direction
+        // For inline move, we select tip and tap neighbor.
+        // For broadside, we select line and tap neighbor of one?
 
-    slots[index] = current.copyWith(owner: next);
-    holoCount =
-        slots.where((slot) => slot.owner == MarbleState.holographic).length;
-    quantumCount =
-        slots.where((slot) => slot.owner == MarbleState.quantum).length;
+        // Let's assume standard UI: drag or tap neighbor.
+        // If tapping a neighbor of any selected marble.
+
+        // Check if `coord` is neighbor of any selected marble
+        Direction? moveDir;
+        for (var s in selection) {
+          var d = s.directionTo(coord);
+          if (d != null) {
+            // Check if this direction makes sense for the whole group?
+            // For broadside, all must move in `d`.
+            // For inline, `d` must be the line direction.
+            moveDir = d;
+            break;
+          }
+        }
+
+        if (moveDir != null) {
+          MoveValidator validator = MoveValidator(board);
+          if (validator.validateMove(selection, moveDir, currentPlayer)) {
+            board.executeMove(selection, moveDir);
+            selection.clear();
+            advanceTurn();
+          }
+        }
+      }
+    }
   }
 
   void advanceTurn() {
@@ -1076,18 +1148,35 @@ class GameState {
   }
 
   VisualizerParams visualParamsFor(PlayerSide side) {
-    final total = max(holoCount + quantumCount, 1);
+    // Logic updated to use captured counts (balls lost)
+    // Total marbles per player starts at 14.
+    // Captured = lost.
+
     final isHolo = side == PlayerSide.holographic;
-    final myCount = isHolo ? holoCount : quantumCount;
-    final theirCount = isHolo ? quantumCount : holoCount;
-    final deficit = (theirCount - myCount).clamp(0, total);
-    final advantage = (myCount - theirCount).clamp(0, total);
+    final myCaptured = isHolo ? holoCaptured : quantumCaptured; // wait, holoCaptured tracks Holo marbles captured?
+    // In game logic: "if state == holo -> holoCaptured++". Yes.
+
+    // Remaining count
+    final myCount = 14 - myCaptured;
+
+    final theirCaptured = isHolo ? quantumCaptured : holoCaptured;
+    final theirCount = 14 - theirCaptured;
+
+    final total = max(myCount + theirCount, 1);
+
+    final deficit = (theirCount - myCount).clamp(0, 14); // If I have fewer marbles
+    final advantage = (myCount - theirCount).clamp(0, 14);
     final balance = (myCount / total).clamp(0.0, 1.0);
 
-    final chaos = (deficit / total) * 0.9 + 0.1;
-    final speed = 0.6 + (deficit / total) * 0.9;
-    final density = 0.4 + (advantage / total) * 0.6;
-    final hue = isHolo ? 290.0 - deficit * 8 : 200.0 + deficit * 6;
+    // Losing player (deficit > 0) -> redder, more chaotic, lower density, higher speed.
+    final chaos = (deficit / 14.0) * 0.9 + 0.1;
+    final speed = 0.6 + (deficit / 14.0) * 0.9;
+    final density = 0.4 + (advantage / 14.0) * 0.6;
+
+    // Hue shift based on deficit/advantage
+    final hue = isHolo
+        ? 290.0 - deficit * 8 // Holo shifts redder if losing? 290 is purple. Red is 0/360.
+        : 200.0 + deficit * 6; // Quantum (blue 200). Shifts?
 
     return VisualizerParams(
       chaos: chaos,
@@ -1095,8 +1184,8 @@ class GameState {
       density: density,
       morph: 0.35 + balance * 0.5,
       hue: hue,
-      intensity: 0.8 + advantage / total * 0.2,
-      saturation: 0.75 + advantage / total * 0.2,
+      intensity: 0.8 + advantage / 14.0 * 0.2,
+      saturation: 0.75 + advantage / 14.0 * 0.2,
       geometry: 4 + (deficit % 6),
       rotation: Vib3Rotation(
         xy: 0.4 + balance,
@@ -1117,6 +1206,7 @@ class BoardSlot {
     required this.position,
     required this.owner,
     required this.seed,
+    required this.coordinate,
   });
 
   final int row;
@@ -1124,6 +1214,7 @@ class BoardSlot {
   final Offset position;
   final MarbleState owner;
   final double seed;
+  final HexCoordinate coordinate;
 
   BoardSlot copyWith({MarbleState? owner}) {
     return BoardSlot(
@@ -1132,6 +1223,7 @@ class BoardSlot {
       position: position,
       owner: owner ?? this.owner,
       seed: seed,
+      coordinate: coordinate,
     );
   }
 }

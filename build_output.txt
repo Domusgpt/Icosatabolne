@@ -1,0 +1,60 @@
+Running Gradle task 'assembleRelease'...
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:185:14: Error: Type 'RotationPlane' not found.
+  final List<RotationPlane> activePlanes;
+             ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:191:32: Error: Undefined name 'RotationPlane'.
+    this.activePlanes = const [RotationPlane.xw, RotationPlane.yw],
+                               ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:191:50: Error: Undefined name 'RotationPlane'.
+    this.activePlanes = const [RotationPlane.xw, RotationPlane.yw],
+                                                 ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/ffi/vib3_ffi.dart:272:44: Error: The method 'sqrt' isn't defined for the type 'double'.
+Try correcting the name to the name of an existing method, or defining a method named 'sqrt'.
+    return (x * x + y * y + z * z + w * w).sqrt();
+                                           ^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/ffi/vib3_ffi.dart:536:12: Error: The getter 'malloc' isn't defined for the type '_CallocAllocator'.
+ - '_CallocAllocator' is from 'package:vib3_flutter/src/ffi/vib3_ffi.dart' ('/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/ffi/vib3_ffi.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'malloc'.
+    return malloc.allocate<T>(byteCount, alignment: alignment);
+           ^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/ffi/vib3_ffi.dart:541:5: Error: The getter 'malloc' isn't defined for the type '_CallocAllocator'.
+ - '_CallocAllocator' is from 'package:vib3_flutter/src/ffi/vib3_ffi.dart' ('/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/ffi/vib3_ffi.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'malloc'.
+    malloc.free(pointer);
+    ^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:133:31: Error: The getter 'RotationPlane' isn't defined for the type '_Vib3InteractiveViewState'.
+ - '_Vib3InteractiveViewState' is from 'package:vib3_flutter/src/widgets/vib3_view.dart' ('/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'RotationPlane'.
+    widget.engine.batchRotate(RotationPlane.xw,
+                              ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:135:31: Error: The getter 'RotationPlane' isn't defined for the type '_Vib3InteractiveViewState'.
+ - '_Vib3InteractiveViewState' is from 'package:vib3_flutter/src/widgets/vib3_view.dart' ('/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'RotationPlane'.
+    widget.engine.batchRotate(RotationPlane.yw,
+                              ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:158:7: Error: The getter 'RotationPlane' isn't defined for the type '_Vib3InteractiveViewState'.
+ - '_Vib3InteractiveViewState' is from 'package:vib3_flutter/src/widgets/vib3_view.dart' ('/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart').
+Try correcting the name to the name of an existing getter, or defining a getter or field named 'RotationPlane'.
+      RotationPlane.zw,
+      ^^^^^^^^^^^^^
+/home/jules/.pub-cache/git/vib3codeSDKv3.0.0-cfe08e4af37f5340c76de53442bd34c2aa9f9875/flutter/lib/src/widgets/vib3_view.dart:185:14: Error: 'RotationPlane' isn't a type.
+  final List<RotationPlane> activePlanes;
+             ^^^^^^^^^^^^^
+Target kernel_snapshot_program failed: Exception
+
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':app:compileFlutterBuildRelease'.
+> Process 'command '/opt/flutter/bin/flutter'' finished with non-zero exit value 1
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 12s
+Running Gradle task 'assembleRelease'...                           13.0s
+Gradle task assembleRelease failed with exit code 1

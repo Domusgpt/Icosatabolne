@@ -1,0 +1,60 @@
+Analyzing app...
+
+warning • The value of the local variable 'startX' isn't used • lib/game_logic.dart:142:11 • unused_local_variable
+warning • The value of the local variable 'allMoving' isn't used • lib/game_logic.dart:304:27 • unused_local_variable
+warning • The value of the local variable 'state' isn't used • lib/game_logic.dart:356:13 • unused_local_variable
+warning • The '!' will have no effect because the receiver can't be null • lib/game_logic.dart:480:31 • unnecessary_non_null_assertion
+warning • The value of the local variable 'third' isn't used • lib/game_logic.dart:546:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:300:27 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:318:33 • deprecated_member_use
+   info • Use 'const' with the constructor to improve performance • lib/main.dart:376:27 • prefer_const_constructors
+   info • Use 'const' literals as arguments to constructors of '@immutable' classes • lib/main.dart:377:27 • prefer_const_literals_to_create_immutables
+   info • Use 'const' with the constructor to improve performance • lib/main.dart:382:27 • prefer_const_constructors
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:386:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:453:25 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:465:27 • deprecated_member_use
+   info • Use 'const' with the constructor to improve performance • lib/main.dart:482:29 • prefer_const_constructors
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:504:43 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:507:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:561:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:586:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:587:40 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:593:46 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:767:26 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:768:26 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:816:58 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:822:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:859:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:869:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:887:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:901:35 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:931:22 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:932:21 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:942:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:953:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:989:30 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/main.dart:1000:30 • deprecated_member_use
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:7:22 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:8:45 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:9:44 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:13:22 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:14:33 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:15:33 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:25:24 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:28:28 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:29:28 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:39:20 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:40:22 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:53:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:54:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:56:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:57:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:75:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:76:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:77:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:78:19 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:101:16 • prefer_const_constructors
+   info • Use 'const' with the constructor to improve performance • test/game_logic_test.dart:102:16 • prefer_const_constructors
+  error • The name 'MyApp' isn't a class • test/widget_test.dart:16:35 • creation_with_non_type
+
+56 issues found. (ran in 12.6s)
