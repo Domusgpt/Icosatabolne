@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:icosatabolne/ui/game_screen.dart';
@@ -5,12 +6,15 @@ import 'package:icosatabolne/ui/board_widget.dart';
 
 void main() {
   testWidgets('GameScreen renders components', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+
     await tester.pumpWidget(const MaterialApp(
       home: GameScreen(),
     ));
 
     // Pump to settle initial animations
     await tester.pump(const Duration(seconds: 1));
+    debugDefaultTargetPlatformOverride = null;
 
     // Verify BoardWidget is present
     expect(find.byType(BoardWidget), findsOneWidget);

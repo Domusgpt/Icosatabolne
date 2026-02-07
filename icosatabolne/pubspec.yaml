@@ -14,7 +14,10 @@ dependencies:
   provider: ^6.1.1
   vector_math: ^2.1.4
   vib3_flutter:
-    path: ../vib3codeSDK/flutter
+    git:
+      url: https://github.com/Domusgpt/vib3codeSDKv3.0.0.git
+      ref: claude/project-review-planning-NWnhW
+      path: flutter
   audioplayers: ^6.5.1
 
 dev_dependencies:

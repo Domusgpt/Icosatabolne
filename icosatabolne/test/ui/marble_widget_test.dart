@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:icosatabolne/game/board_state.dart';
@@ -6,6 +7,8 @@ import 'package:icosatabolne/visuals/vib3_adapter.dart';
 
 void main() {
   testWidgets('MarbleWidget renders Vib3Adapter', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
+
     await tester.pumpWidget(const MaterialApp(
       home: Scaffold(
         body: MarbleWidget(
@@ -17,6 +20,7 @@ void main() {
     ));
 
     await tester.pump(); // Start animation (Adapter animate=true default)
+    debugDefaultTargetPlatformOverride = null;
 
     expect(find.byType(Vib3Adapter), findsOneWidget);
 

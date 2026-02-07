@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   audioplayers_windows
+  vib3_flutter
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST
