@@ -30,8 +30,8 @@ class GlyphWarController extends ChangeNotifier {
   GlyphWarPhase phase = GlyphWarPhase.scramble;
   final List<Glyph> _allGlyphs = [];
 
-  late final PlayerState player1;
-  late final PlayerState player2;
+  late PlayerState player1;
+  late PlayerState player2;
 
   Timer? _gameTimer;
   Timer? _attackTimer;

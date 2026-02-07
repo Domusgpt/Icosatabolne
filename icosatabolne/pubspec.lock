@@ -251,9 +251,11 @@ packages:
   vib3_flutter:
     dependency: "direct main"
     description:
-      path: "../vib3codeSDK/flutter"
-      relative: true
-    source: path
+      path: flutter
+      ref: "fix/sdk-integration-missing-files-18347237250635644954"
+      resolved-ref: be2a0d63f18889cabe14f5e8465578bb0c2812e5
+      url: "https://github.com/Domusgpt/vib3codeSDKv3.0.0.git"
+    source: git
     version: "1.7.0"
   vm_service:
     dependency: transitive
