@@ -6,9 +6,9 @@
 
 #include "generated_plugin_registrant.h"
 
-#include <vib3_flutter/vib3_flutter_plugin_c_api.h>
+#include <audioplayers_windows/audioplayers_windows_plugin.h>
 
 void RegisterPlugins(flutter::PluginRegistry* registry) {
-  Vib3FlutterPluginCApiRegisterWithRegistrar(
-      registry->GetRegistrarForPlugin("Vib3FlutterPluginCApi"));
+  AudioplayersWindowsPluginRegisterWithRegistrar(
+      registry->GetRegistrarForPlugin("AudioplayersWindowsPlugin"));
 }

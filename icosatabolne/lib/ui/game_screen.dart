@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:icosatabolne/game/game_controller.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/ui/board_widget.dart';
+import 'package:icosatabolne/visuals/visual_effects_layer.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'dart:math';
@@ -31,7 +32,12 @@ class GameScreen extends StatelessWidget {
                       child: LayoutBuilder(
                         builder: (context, constraints) {
                           double size = min(constraints.maxWidth, constraints.maxHeight);
-                          return BoardWidget(size: size * 0.9);
+                          final controller = context.watch<GameController>();
+                          return VisualEffectsLayer(
+                            chaos: controller.chaosLevel,
+                            intensity: controller.speedLevel,
+                            child: BoardWidget(size: size * 0.9),
+                          );
                         },
                       ),
                     ),

@@ -15,6 +15,7 @@ dependencies:
   vector_math: ^2.1.4
   vib3_flutter:
     path: ../vib3codeSDK/flutter
+  audioplayers: ^6.5.1
 
 dev_dependencies:
   flutter_test:

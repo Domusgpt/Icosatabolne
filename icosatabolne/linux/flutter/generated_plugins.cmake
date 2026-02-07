@@ -3,7 +3,7 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
-  vib3_flutter
+  audioplayers_linux
 )
 
 list(APPEND FLUTTER_FFI_PLUGIN_LIST

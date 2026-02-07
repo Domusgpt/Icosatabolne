@@ -5,8 +5,8 @@
 import FlutterMacOS
 import Foundation
 
-import vib3_flutter
+import audioplayers_darwin
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  Vib3FlutterPlugin.register(with: registry.registrar(forPlugin: "Vib3FlutterPlugin"))
+  AudioplayersDarwinPlugin.register(with: registry.registrar(forPlugin: "AudioplayersDarwinPlugin"))
 }
