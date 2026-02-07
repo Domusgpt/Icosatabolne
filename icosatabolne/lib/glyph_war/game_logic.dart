@@ -66,6 +66,19 @@ class GlyphWarController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void resetGame() {
+    _attackTimer?.cancel();
+    _gameTimer?.cancel();
+
+    // Reset players
+    player1 = PlayerState('P1');
+    player2 = PlayerState('P2');
+    winnerId = null;
+    attackTimeRemaining = 0;
+
+    _initializeGame();
+  }
+
   List<Glyph> get pile => _allGlyphs.where((g) => g.heldByPlayerId == null).toList();
   List<Glyph> get player1Word => player1.currentWord;
   List<Glyph> get player2Word => player2.currentWord;
