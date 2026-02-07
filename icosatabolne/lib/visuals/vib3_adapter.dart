@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 import 'fallback_painter.dart';
 
 class Vib3Adapter extends StatefulWidget {

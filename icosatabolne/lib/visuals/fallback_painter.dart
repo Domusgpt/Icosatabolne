@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 import 'dart:math';
 
 class FallbackPainter extends CustomPainter {

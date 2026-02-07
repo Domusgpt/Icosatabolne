@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/visuals/vib3_adapter.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 
 class MarbleWidget extends StatelessWidget {
   final Player player;
