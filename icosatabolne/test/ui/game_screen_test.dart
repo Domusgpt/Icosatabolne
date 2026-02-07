@@ -12,9 +12,11 @@ void main() {
       home: GameScreen(),
     ));
 
+    // Allow post frame callback to run and trigger setState
+    await tester.pump();
+
     // Pump to settle initial animations
     await tester.pump(const Duration(seconds: 1));
-    debugDefaultTargetPlatformOverride = null;
 
     // Verify BoardWidget is present
     expect(find.byType(BoardWidget), findsOneWidget);
@@ -26,5 +28,10 @@ void main() {
 
     // Verify Turn indicator
     expect(find.textContaining('TURN:'), findsOneWidget);
+
+    // Dispose widget tree to stop animations before resetting platform
+    await tester.pumpWidget(const SizedBox());
+    await tester.pump(); // Ensure disposal completes
+    debugDefaultTargetPlatformOverride = null;
   });
 }

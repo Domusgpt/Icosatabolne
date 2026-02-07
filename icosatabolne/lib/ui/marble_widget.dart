@@ -11,6 +11,7 @@ class MarbleWidget extends StatelessWidget {
   final double hueShift;
   final double speed;
   final bool animate;
+  final Vib3Engine? engine; // Optional shared engine
 
   const MarbleWidget({
     super.key,
@@ -21,10 +22,12 @@ class MarbleWidget extends StatelessWidget {
     this.hueShift = 0.0,
     this.speed = 1.0,
     this.animate = true,
+    this.engine,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Determine config based on player (still needed for fallback or visual logic)
     final system = player == Player.holographic ? 'holographic' : 'quantum';
     final geometry = player == Player.holographic ? 0 : 8;
 
@@ -52,6 +55,7 @@ class MarbleWidget extends StatelessWidget {
           speed: speed,
           hue: 200 + hueShift,
           animate: animate,
+          sharedEngine: engine, // Pass shared engine
         ),
       ),
     );

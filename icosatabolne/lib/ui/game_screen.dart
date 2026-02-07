@@ -1,18 +1,90 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:icosatabolne/game/game_controller.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/ui/board_widget.dart';
 import 'package:icosatabolne/visuals/visual_effects_layer.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'dart:math';
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
   @override
+  State<GameScreen> createState() => _GameScreenState();
+}
+
+class _GameScreenState extends State<GameScreen> {
+  Vib3Engine? _quantumEngine;
+  Vib3Engine? _holographicEngine;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _initEngines());
+  }
+
+  Future<void> _initEngines() async {
+    // On Web or Desktop (non-mobile), we might just skip this or let the shim handle it.
+    // The shim is safe, so we can just initialize.
+    final isMobile = defaultTargetPlatform == TargetPlatform.android || defaultTargetPlatform == TargetPlatform.iOS;
+    if (kIsWeb || !isMobile) {
+      if (mounted) setState(() => _isLoading = false);
+      return;
+    }
+
+    try {
+      _quantumEngine = Vib3Engine();
+      await _quantumEngine!.initialize(const Vib3Config(
+        system: 'quantum',
+        geometry: 8,
+        gridDensity: 32,
+      ));
+      await _quantumEngine!.setVisualParams(hue: 200, saturation: 0.8, intensity: 0.9);
+      await _quantumEngine!.startRendering();
+
+      _holographicEngine = Vib3Engine();
+      await _holographicEngine!.initialize(const Vib3Config(
+        system: 'holographic',
+        geometry: 0,
+        gridDensity: 32,
+      ));
+      await _holographicEngine!.setVisualParams(hue: 180, saturation: 0.8, intensity: 0.9);
+      await _holographicEngine!.startRendering();
+    } catch (e) {
+      debugPrint("Failed to initialize shared engines: $e");
+      // Fallback to null engines (Marbles will try to create their own or fail gracefully)
+    }
+
+    if (mounted) {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _quantumEngine?.stopRendering();
+    _quantumEngine?.dispose();
+    _holographicEngine?.stopRendering();
+    _holographicEngine?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        backgroundColor: Colors.black,
+        body: Center(child: CircularProgressIndicator(color: Colors.cyanAccent)),
+      );
+    }
+
     return ChangeNotifierProvider(
       create: (_) => GameController(),
       child: Scaffold(
@@ -36,7 +108,11 @@ class GameScreen extends StatelessWidget {
                           return VisualEffectsLayer(
                             chaos: controller.chaosLevel,
                             intensity: controller.speedLevel,
-                            child: BoardWidget(size: size * 0.9),
+                            child: BoardWidget(
+                              size: size * 0.9,
+                              quantumEngine: _quantumEngine,
+                              holographicEngine: _holographicEngine,
+                            ),
                           );
                         },
                       ),
