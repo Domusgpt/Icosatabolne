@@ -11,6 +11,7 @@ void main() {
         body: MarbleWidget(
           player: Player.holographic,
           size: 50,
+          animate: false,
         ),
       ),
     ));

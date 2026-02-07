@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:vib3_flutter/vib3_flutter.dart';
@@ -54,7 +54,7 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
 
   Future<void> _initEngine() async {
     // Check platform first. We only support mobile for the native engine.
-    if (!Platform.isAndroid && !Platform.isIOS) {
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
       if (mounted) setState(() => _useFallback = true);
       return;
     }

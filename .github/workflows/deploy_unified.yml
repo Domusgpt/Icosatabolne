@@ -1,0 +1,56 @@
+name: Deploy Unified
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install Dependencies
+        run: |
+          cd icosatabolne
+          flutter pub get
+
+      - name: Run Tests
+        run: |
+          cd icosatabolne
+          flutter test
+
+      - name: Build Web
+        run: |
+          cd icosatabolne
+          flutter build web --release --base-href "/${{ github.event.repository.name }}/"
+
+      - name: Build APK
+        run: |
+          cd icosatabolne
+          flutter build apk --release
+
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./icosatabolne/build/web
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-release.apk
+          path: icosatabolne/build/app/outputs/flutter-apk/app-release.apk
