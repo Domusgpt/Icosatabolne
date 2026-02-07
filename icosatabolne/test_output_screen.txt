@@ -1,12 +1,0 @@
-00:00 +0: loading /app/icosatabolne/test/ui/game_screen_test.dart                                                                                                                                      00:01 +0: loading /app/icosatabolne/test/ui/game_screen_test.dart                                                                                                                                      lib/ui/game_screen.dart:102:38: Error: Member not found: 'magenta'.
-                Shadow(color: Colors.magenta, blurRadius: 5, offset: Offset(2, 0)),
-                                     ^^^^^^^
-00:01 +0 -1: loading /app/icosatabolne/test/ui/game_screen_test.dart [E]
-  Failed to load "/app/icosatabolne/test/ui/game_screen_test.dart":
-  Compilation failed for testPath=/app/icosatabolne/test/ui/game_screen_test.dart: lib/ui/game_screen.dart:102:38: Error: Member not found: 'magenta'.
-                  Shadow(color: Colors.magenta, blurRadius: 5, offset: Offset(2, 0)),
-                                       ^^^^^^^
-  .
-
-To run this test again: /opt/flutter/bin/cache/dart-sdk/bin/dart test /app/icosatabolne/test/ui/game_screen_test.dart -p vm --plain-name 'loading /app/icosatabolne/test/ui/game_screen_test.dart'
-00:01 +0 -1: Some tests failed.

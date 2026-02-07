@@ -1,32 +1,0 @@
-00:00 +0: loading /app/icosatabolne/test/visuals/vib3_adapter_test.dart                                                                                                                                00:01 +0: loading /app/icosatabolne/test/visuals/vib3_adapter_test.dart                                                                                                                                00:02 +0: loading /app/icosatabolne/test/visuals/vib3_adapter_test.dart                                                                                                                                00:02 +0: Vib3Adapter renders fallback on non-mobile                                                                                                                                                   00:02 +0: Vib3Adapter renders fallback on non-mobile
-══╡ EXCEPTION CAUGHT BY FLUTTER TEST FRAMEWORK ╞════════════════════════════════════════════════════
-The following TestFailure was thrown running a test:
-Expected: exactly one matching candidate
-  Actual: _TypeWidgetFinder:<Found 2 widgets with type "CustomPaint": [
-            CustomPaint(renderObject: RenderCustomPaint#1ae0f),
-            CustomPaint(renderObject: RenderCustomPaint#5ad60 relayoutBoundary=up1),
-          ]>
-   Which: is too many
-
-When the exception was thrown, this was the stack:
-#4      main.<anonymous closure> (file:///app/icosatabolne/test/visuals/vib3_adapter_test.dart:25:5)
-<asynchronous suspension>
-#5      testWidgets.<anonymous closure>.<anonymous closure> (package:flutter_test/src/widget_tester.dart:192:15)
-<asynchronous suspension>
-#6      TestWidgetsFlutterBinding._runTestBody (package:flutter_test/src/binding.dart:1059:5)
-<asynchronous suspension>
-<asynchronous suspension>
-(elided one frame from package:stack_trace)
-
-This was caught by the test expectation on the following line:
-  file:///app/icosatabolne/test/visuals/vib3_adapter_test.dart line 25
-The test description was:
-  Vib3Adapter renders fallback on non-mobile
-════════════════════════════════════════════════════════════════════════════════════════════════════
-00:02 +0 -1: Vib3Adapter renders fallback on non-mobile [E]
-  Test failed. See exception logs above.
-  The test description was: Vib3Adapter renders fallback on non-mobile
-
-
-To run this test again: /opt/flutter/bin/cache/dart-sdk/bin/dart test /app/icosatabolne/test/visuals/vib3_adapter_test.dart -p vm --plain-name 'Vib3Adapter renders fallback on non-mobile'
-00:02 +0 -1: Some tests failed.
