@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:icosatabolne/game/game_controller.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 
 void main() {
   testWidgets('BoardWidget renders marbles', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final controller = GameController();
 
     await tester.pumpWidget(MaterialApp(
@@ -19,6 +21,7 @@ void main() {
     ));
 
     await tester.pumpAndSettle();
+    debugDefaultTargetPlatformOverride = null;
 
     // Verify marbles are rendered
     // Initial setup has 28 marbles.
@@ -29,6 +32,7 @@ void main() {
   });
 
   testWidgets('BoardWidget handles selection', (WidgetTester tester) async {
+    debugDefaultTargetPlatformOverride = TargetPlatform.linux;
     final controller = GameController();
 
     await tester.pumpWidget(MaterialApp(
@@ -43,6 +47,7 @@ void main() {
     // Tap on a marble
     await tester.tap(find.byType(MarbleWidget).first);
     await tester.pump();
+    debugDefaultTargetPlatformOverride = null;
 
     final selectedMarbles = tester.widgetList<MarbleWidget>(find.byType(MarbleWidget))
         .where((w) => w.isSelected);

@@ -1,7 +1,7 @@
-import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 import 'fallback_painter.dart';
 
 class Vib3Adapter extends StatefulWidget {
@@ -14,6 +14,7 @@ class Vib3Adapter extends StatefulWidget {
   final double hue;
   final double saturation;
   final double intensity;
+  final Vib3Engine? sharedEngine; // Optional shared engine
 
   const Vib3Adapter({
     super.key,
@@ -26,6 +27,7 @@ class Vib3Adapter extends StatefulWidget {
     this.hue = 200,
     this.saturation = 0.8,
     this.intensity = 0.9,
+    this.sharedEngine,
   });
 
   @override
@@ -36,6 +38,7 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
   Vib3Engine? _engine;
   bool _useFallback = false;
   late AnimationController _controller;
+  bool _isShared = false;
 
   @override
   void initState() {
@@ -54,15 +57,22 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
 
   Future<void> _initEngine() async {
     // Check platform first. We only support mobile for the native engine.
-    if (!Platform.isAndroid && !Platform.isIOS) {
+    if (kIsWeb || (defaultTargetPlatform != TargetPlatform.android && defaultTargetPlatform != TargetPlatform.iOS)) {
       if (mounted) setState(() => _useFallback = true);
       return;
     }
 
+    if (widget.sharedEngine != null) {
+      _engine = widget.sharedEngine;
+      _isShared = true;
+      if (mounted) setState(() {});
+      return;
+    }
+
+    // Otherwise create a new one (legacy/fallback behavior)
     try {
       _engine = Vib3Engine();
       await _engine!.initialize(widget.config);
-      // Set initial visual params
       await _engine!.setVisualParams(
         intensity: widget.intensity,
         saturation: widget.saturation,
@@ -82,9 +92,12 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
   @override
   void didUpdateWidget(Vib3Adapter oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // If using shared engine, we DO NOT update params here because it would affect all instances.
+    // Shared engine params should be updated by the manager (GameScreen).
+    if (_isShared) return;
+
     if (_engine != null && _engine!.isInitialized) {
-      // Check for changes and update engine
-      // This is a simplification. In real app we might want to diff more properties.
       if (widget.config.system != oldWidget.config.system) {
         _engine!.setSystem(widget.config.system);
       }
@@ -110,8 +123,11 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
 
   @override
   void dispose() {
-    _engine?.stopRendering();
-    _engine?.dispose();
+    // Only dispose if we own the engine
+    if (!_isShared) {
+      _engine?.stopRendering();
+      _engine?.dispose();
+    }
     _controller.dispose();
     super.dispose();
   }
@@ -126,7 +142,7 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
             size: Size(widget.width, widget.height),
             painter: FallbackPainter(
               config: widget.config,
-              animationValue: _controller.value * 2 * 3.14159, // 2*PI
+              animationValue: _controller.value * 2 * 3.14159,
               chaos: widget.chaos,
               speed: widget.speed,
               hue: widget.hue,
@@ -137,13 +153,10 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
     }
 
     if (_engine == null || !_engine!.isInitialized || _engine!.textureId == null) {
-      // Loading state
       return Container(
         width: widget.width,
         height: widget.height,
         color: Colors.black12,
-        // Don't show progress indicator if we expect it to be fast or hidden
-        // child: const Center(child: CircularProgressIndicator()),
       );
     }
 

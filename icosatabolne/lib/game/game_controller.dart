@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'board_state.dart';
 import 'hex_grid.dart';
 import 'rules.dart';
+import 'sound_haptics_manager.dart';
 
 class GameController extends ChangeNotifier {
   BoardState _board;
@@ -9,6 +10,21 @@ class GameController extends ChangeNotifier {
   int _turnCount;
   final Map<Player, int> _capturedMarbles;
   String? _lastError;
+  final SoundHapticsManager _soundHaptics = SoundHapticsManager();
+
+  // Dynamic Visual/Haptic Parameters
+  double get chaosLevel {
+    // 0.0 to 1.0 based on game progression
+    // Max turns ~60?
+    double progress = (_turnCount / 60).clamp(0.0, 1.0);
+    // Also affected by captures
+    int totalCaptures = (_capturedMarbles[Player.holographic] ?? 0) +
+                        (_capturedMarbles[Player.quantum] ?? 0);
+    double tension = (totalCaptures / 12).clamp(0.0, 1.0);
+    return (progress * 0.4 + tension * 0.6).clamp(0.0, 1.0);
+  }
+
+  double get speedLevel => 1.0 + chaosLevel * 2.0;
 
   GameController()
       : _board = BoardState.initial(),
@@ -18,6 +34,12 @@ class GameController extends ChangeNotifier {
           Player.holographic: 0,
           Player.quantum: 0,
         };
+
+  @override
+  void dispose() {
+    _soundHaptics.dispose();
+    super.dispose();
+  }
 
   BoardState get board => _board;
   Player get currentTurn => _currentTurn;
@@ -82,6 +104,7 @@ class GameController extends ChangeNotifier {
     // Add pushed marbles to new positions
     // Opponent is opposite of mover
     Player opponent = (mover == Player.holographic) ? Player.quantum : Player.holographic;
+    bool captureHappened = false;
 
     for (var hex in result.pushedMarbles) {
       // If this marble is eliminated, do not add it back.
@@ -89,6 +112,7 @@ class GameController extends ChangeNotifier {
         // Captured!
         // Who captured it? The mover.
         _capturedMarbles[mover] = (_capturedMarbles[mover] ?? 0) + 1;
+        captureHappened = true;
       } else {
         newPieces[hex.neighbor(direction)] = opponent;
       }
@@ -98,6 +122,15 @@ class GameController extends ChangeNotifier {
     _currentTurn = (mover == Player.holographic) ? Player.quantum : Player.holographic;
     _turnCount++;
     _lastError = null;
+
+    // Trigger Effects
+    if (isGameOver) {
+      _soundHaptics.triggerWin();
+    } else if (captureHappened) {
+      _soundHaptics.triggerCapture(chaosLevel);
+    } else {
+      _soundHaptics.triggerMove(chaosLevel);
+    }
 
     notifyListeners();
     return true;
