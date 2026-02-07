@@ -212,8 +212,8 @@ packages:
     dependency: "direct main"
     description:
       path: flutter
-      ref: "feature/holographic-exhale-fix-2970824138550486291"
-      resolved-ref: cfe08e4af37f5340c76de53442bd34c2aa9f9875
+      ref: "claude/project-review-planning-NWnhW"
+      resolved-ref: "0602b26d20cd612f231eb1d823614c82a3fd9c1b"
       url: "https://github.com/Domusgpt/vib3codeSDKv3.0.0.git"
     source: git
     version: "1.7.0"

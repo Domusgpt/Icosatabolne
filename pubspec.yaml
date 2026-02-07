@@ -13,7 +13,7 @@ dependencies:
   vib3_flutter:
     git:
       url: https://github.com/Domusgpt/vib3codeSDKv3.0.0.git
-      ref: feature/holographic-exhale-fix-2970824138550486291
+      ref: claude/project-review-planning-NWnhW
       path: flutter
 
 dev_dependencies:
