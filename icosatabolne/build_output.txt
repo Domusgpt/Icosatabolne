@@ -1,0 +1,1132 @@
+Compiling lib/main.dart for the Web...
+Wasm dry run findings:
+Found incompatibilities with WebAssembly.
+
+package:vib3_flutter/src/ffi/vib3_ffi.dart 7:1 - 'dart:ffi' can't be imported when compiling to Wasm. (2)
+package:ffi/src/allocation.dart 5:1 - 'dart:ffi' can't be imported when compiling to Wasm. (2)
+package:ffi/src/arena.dart 8:1 - 'dart:ffi' can't be imported when compiling to Wasm. (2)
+package:ffi/src/utf16.dart 5:1 - 'dart:ffi' can't be imported when compiling to Wasm. (2)
+package:ffi/src/utf8.dart 6:1 - 'dart:ffi' can't be imported when compiling to Wasm. (2)
+
+Consider addressing these issues to enable wasm builds. See docs for more info: https://docs.flutter.dev/platform-integration/web/wasm
+
+Use --no-wasm-dry-run to disable these warnings.
+Target dart2js failed: ProcessException: Process exited abnormally with exit code 1:
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:7:8:
+Error: Dart library 'dart:ffi' is not available on this platform.
+import 'dart:ffi';
+       ^
+Info: The unavailable library 'dart:ffi' is imported through these packages:
+
+    main.dart => package:icosatabolne => package:vib3_flutter => dart:ffi
+    main.dart => package:icosatabolne => package:vib3_flutter => package:ffi => dart:ffi
+
+Detailed import paths for (some of) the these imports:
+
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/allocation.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/arena.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf16.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf8.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/allocation.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/arena.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf16.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf8.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/allocation.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/arena.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf16.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf8.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/allocation.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/arena.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf16.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_view.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => package:ffi/ffi.dart => package:ffi/src/utf8.dart => dart:ffi
+    main.dart => package:icosatabolne/main.dart => package:icosatabolne/ui/game_screen.dart => package:icosatabolne/ui/board_widget.dart => package:icosatabolne/ui/marble_widget.dart => package:icosatabolne/visuals/vib3_adapter.dart => package:vib3_flutter/vib3_flutter.dart => package:vib3_flutter/src/widgets/vib3_controls.dart => package:vib3_flutter/src/vib3_engine.dart => package:vib3_flutter/src/ffi/vib3_ffi.dart => dart:ffi
+    ...
+
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:5:8:
+Error: Dart library 'dart:ffi' is not available on this platform.
+import 'dart:ffi';
+       ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:8:8:
+Error: Dart library 'dart:ffi' is not available on this platform.
+import 'dart:ffi';
+       ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:5:8:
+Error: Dart library 'dart:ffi' is not available on this platform.
+import 'dart:ffi';
+       ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:6:8:
+Error: Dart library 'dart:ffi' is not available on this platform.
+import 'dart:ffi';
+       ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:34:7:
+Error: Type 'DynamicLibrary' not found.
+final DynamicLibrary _nativeLib = _loadLibrary();
+      ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:533:7:
+Error: Type 'Allocator' not found.
+final Allocator calloc = malloc;
+      ^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:18:1:
+Error: Type 'DynamicLibrary' not found.
+DynamicLibrary _loadLibrary() {
+^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:41:32:
+Error: Type 'Struct' not found.
+final class NativeVec4 extends Struct {
+                               ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:56:35:
+Error: Type 'Struct' not found.
+final class NativeRotor4D extends Struct {
+                                  ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:83:34:
+Error: Type 'Struct' not found.
+final class NativeMat4x4 extends Struct {
+                                 ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:85:18:
+Error: Type 'Float' not found.
+  external Array<Float> data;
+                 ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:85:12:
+Error: Type 'Array' not found.
+  external Array<Float> data;
+           ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:89:40:
+Error: Type 'Struct' not found.
+final class CommandBatchHeader extends Struct {
+                                       ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:105:29:
+Error: Type 'Pointer' not found.
+typedef _Vec4CreateNative = Pointer<NativeVec4> Function(Float x, Float y, Float z, Float w);
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:105:58:
+Error: Type 'Float' not found.
+typedef _Vec4CreateNative = Pointer<NativeVec4> Function(Float x, Float y, Float z, Float w);
+                                                         ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:105:67:
+Error: Type 'Float' not found.
+typedef _Vec4CreateNative = Pointer<NativeVec4> Function(Float x, Float y, Float z, Float w);
+                                                                  ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:105:76:
+Error: Type 'Float' not found.
+typedef _Vec4CreateNative = Pointer<NativeVec4> Function(Float x, Float y, Float z, Float w);
+                                                                           ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:105:85:
+Error: Type 'Float' not found.
+typedef _Vec4CreateNative = Pointer<NativeVec4> Function(Float x, Float y, Float z, Float w);
+                                                                                    ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:106:23:
+Error: Type 'Pointer' not found.
+typedef _Vec4Create = Pointer<NativeVec4> Function(double x, double y, double z, double w);
+                      ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:108:26:
+Error: Type 'Float' not found.
+typedef _Vec4DotNative = Float Function(Pointer<NativeVec4> a, Pointer<NativeVec4> b);
+                         ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:108:41:
+Error: Type 'Pointer' not found.
+typedef _Vec4DotNative = Float Function(Pointer<NativeVec4> a, Pointer<NativeVec4> b);
+                                        ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:108:64:
+Error: Type 'Pointer' not found.
+typedef _Vec4DotNative = Float Function(Pointer<NativeVec4> a, Pointer<NativeVec4> b);
+                                                               ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:109:36:
+Error: Type 'Pointer' not found.
+typedef _Vec4Dot = double Function(Pointer<NativeVec4> a, Pointer<NativeVec4> b);
+                                   ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:109:59:
+Error: Type 'Pointer' not found.
+typedef _Vec4Dot = double Function(Pointer<NativeVec4> a, Pointer<NativeVec4> b);
+                                                          ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:111:32:
+Error: Type 'Void' not found.
+typedef _Vec4NormalizeNative = Void Function(Pointer<NativeVec4> v);
+                               ^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:111:46:
+Error: Type 'Pointer' not found.
+typedef _Vec4NormalizeNative = Void Function(Pointer<NativeVec4> v);
+                                             ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:112:40:
+Error: Type 'Pointer' not found.
+typedef _Vec4Normalize = void Function(Pointer<NativeVec4> v);
+                                       ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:114:27:
+Error: Type 'Void' not found.
+typedef _Vec4FreeNative = Void Function(Pointer<NativeVec4> v);
+                          ^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:114:41:
+Error: Type 'Pointer' not found.
+typedef _Vec4FreeNative = Void Function(Pointer<NativeVec4> v);
+                                        ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:115:35:
+Error: Type 'Pointer' not found.
+typedef _Vec4Free = void Function(Pointer<NativeVec4> v);
+                                  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:118:40:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFromPlaneAngleNative = Pointer<NativeRotor4D> Function(Int32 plane, Float angle);
+                                       ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:118:72:
+Error: Type 'Int32' not found.
+typedef _Rotor4DFromPlaneAngleNative = Pointer<NativeRotor4D> Function(Int32 plane, Float angle);
+                                                                       ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:118:85:
+Error: Type 'Float' not found.
+typedef _Rotor4DFromPlaneAngleNative = Pointer<NativeRotor4D> Function(Int32 plane, Float angle);
+                                                                                    ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:119:34:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFromPlaneAngle = Pointer<NativeRotor4D> Function(int plane, double angle);
+                                 ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:121:36:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFromEuler6Native = Pointer<NativeRotor4D> Function(
+                                   ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:3:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+  ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:13:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+            ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:23:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                      ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:33:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:43:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                          ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:122:53:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                                    ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:124:30:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFromEuler6 = Pointer<NativeRotor4D> Function(
+                             ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:128:34:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DMultiplyNative = Pointer<NativeRotor4D> Function(
+                                 ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:129:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:129:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:131:28:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DMultiply = Pointer<NativeRotor4D> Function(
+                           ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:132:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:132:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:135:32:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DRotateNative = Pointer<NativeVec4> Function(
+                               ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:136:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> r, Pointer<NativeVec4> v
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:136:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> r, Pointer<NativeVec4> v
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:138:26:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DRotate = Pointer<NativeVec4> Function(
+                         ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:139:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> r, Pointer<NativeVec4> v
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:139:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> r, Pointer<NativeVec4> v
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:142:31:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DSlerpNative = Pointer<NativeRotor4D> Function(
+                              ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:143:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b, Float t
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:143:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b, Float t
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:143:55:
+Error: Type 'Float' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b, Float t
+                                                      ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:145:25:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DSlerp = Pointer<NativeRotor4D> Function(
+                        ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:146:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b, double t
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:146:29:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> a, Pointer<NativeRotor4D> b, double t
+                            ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:149:30:
+Error: Type 'Void' not found.
+typedef _Rotor4DFreeNative = Void Function(Pointer<NativeRotor4D> r);
+                             ^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:149:44:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFreeNative = Void Function(Pointer<NativeRotor4D> r);
+                                           ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:150:38:
+Error: Type 'Pointer' not found.
+typedef _Rotor4DFree = void Function(Pointer<NativeRotor4D> r);
+                                     ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:153:43:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4RotationFromAnglesNative = Pointer<NativeMat4x4> Function(
+                                          ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:3:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+  ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:13:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+            ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:23:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                      ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:33:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:43:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                          ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:154:53:
+Error: Type 'Float' not found.
+  Float xy, Float xz, Float yz, Float xw, Float yw, Float zw
+                                                    ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:156:37:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4RotationFromAngles = Pointer<NativeMat4x4> Function(
+                                    ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:160:37:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4MultiplyVec4Native = Pointer<NativeVec4> Function(
+                                    ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:161:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeMat4x4> m, Pointer<NativeVec4> v
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:161:28:
+Error: Type 'Pointer' not found.
+  Pointer<NativeMat4x4> m, Pointer<NativeVec4> v
+                           ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:163:31:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4MultiplyVec4 = Pointer<NativeVec4> Function(
+                              ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:164:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeMat4x4> m, Pointer<NativeVec4> v
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:164:28:
+Error: Type 'Pointer' not found.
+  Pointer<NativeMat4x4> m, Pointer<NativeVec4> v
+                           ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:167:29:
+Error: Type 'Void' not found.
+typedef _Mat4x4FreeNative = Void Function(Pointer<NativeMat4x4> m);
+                            ^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:167:43:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4FreeNative = Void Function(Pointer<NativeMat4x4> m);
+                                          ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:168:37:
+Error: Type 'Pointer' not found.
+typedef _Mat4x4Free = void Function(Pointer<NativeMat4x4> m);
+                                    ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:171:37:
+Error: Type 'Pointer' not found.
+typedef _ProjectPerspectiveNative = Pointer<NativeVec4> Function(
+                                    ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:172:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeVec4> v, Float distance
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:172:26:
+Error: Type 'Float' not found.
+  Pointer<NativeVec4> v, Float distance
+                         ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:174:31:
+Error: Type 'Pointer' not found.
+typedef _ProjectPerspective = Pointer<NativeVec4> Function(
+                              ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:175:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeVec4> v, double distance
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:178:39:
+Error: Type 'Pointer' not found.
+typedef _ProjectStereographicNative = Pointer<NativeVec4> Function(Pointer<NativeVec4> v);
+                                      ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:178:68:
+Error: Type 'Pointer' not found.
+typedef _ProjectStereographicNative = Pointer<NativeVec4> Function(Pointer<NativeVec4> v);
+                                                                   ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:179:33:
+Error: Type 'Pointer' not found.
+typedef _ProjectStereographic = Pointer<NativeVec4> Function(Pointer<NativeVec4> v);
+                                ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:179:62:
+Error: Type 'Pointer' not found.
+typedef _ProjectStereographic = Pointer<NativeVec4> Function(Pointer<NativeVec4> v);
+                                                             ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:182:38:
+Error: Type 'Int32' not found.
+typedef _ProcessCommandBatchNative = Int32 Function(
+                                     ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:183:11:
+Error: Type 'Uint8' not found.
+  Pointer<Uint8> commands, Uint32 size, Pointer<Uint8> results
+          ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:183:3:
+Error: Type 'Pointer' not found.
+  Pointer<Uint8> commands, Uint32 size, Pointer<Uint8> results
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:183:28:
+Error: Type 'Uint32' not found.
+  Pointer<Uint8> commands, Uint32 size, Pointer<Uint8> results
+                           ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:183:49:
+Error: Type 'Uint8' not found.
+  Pointer<Uint8> commands, Uint32 size, Pointer<Uint8> results
+                                                ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:183:41:
+Error: Type 'Pointer' not found.
+  Pointer<Uint8> commands, Uint32 size, Pointer<Uint8> results
+                                        ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:186:11:
+Error: Type 'Uint8' not found.
+  Pointer<Uint8> commands, int size, Pointer<Uint8> results
+          ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:186:3:
+Error: Type 'Pointer' not found.
+  Pointer<Uint8> commands, int size, Pointer<Uint8> results
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:186:46:
+Error: Type 'Uint8' not found.
+  Pointer<Uint8> commands, int size, Pointer<Uint8> results
+                                             ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:186:38:
+Error: Type 'Pointer' not found.
+  Pointer<Uint8> commands, int size, Pointer<Uint8> results
+                                     ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:238:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeVec4> _ptr;
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:296:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeRotor4D> _ptr;
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:367:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeMat4x4> _ptr;
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:23:15:
+Error: Type 'NativeFunction' not found.
+final Pointer<NativeFunction<PosixFreeNative>> posixFreePointer =
+              ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:23:7:
+Error: Type 'Pointer' not found.
+final Pointer<NativeFunction<PosixFreeNative>> posixFreePointer =
+      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:27:7:
+Error: Type 'DynamicLibrary' not found.
+final DynamicLibrary ole32lib = DynamicLibrary.open('ole32.dll');
+      ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:38:15:
+Error: Type 'NativeFunction' not found.
+final Pointer<NativeFunction<WinCoTaskMemFreeNative>> winCoTaskMemFreePointer =
+              ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:38:7:
+Error: Type 'Pointer' not found.
+final Pointer<NativeFunction<WinCoTaskMemFreeNative>> winCoTaskMemFreePointer =
+      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:8:29:
+Error: Type 'Pointer' not found.
+typedef PosixMallocNative = Pointer Function(IntPtr);
+                            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:8:46:
+Error: Type 'IntPtr' not found.
+typedef PosixMallocNative = Pointer Function(IntPtr);
+                                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:11:10:
+Error: Type 'Pointer' not found.
+external Pointer posixMalloc(int size);
+         ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:13:29:
+Error: Type 'Pointer' not found.
+typedef PosixCallocNative = Pointer Function(IntPtr num, IntPtr size);
+                            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:13:46:
+Error: Type 'IntPtr' not found.
+typedef PosixCallocNative = Pointer Function(IntPtr num, IntPtr size);
+                                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:13:58:
+Error: Type 'IntPtr' not found.
+typedef PosixCallocNative = Pointer Function(IntPtr num, IntPtr size);
+                                                         ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:16:10:
+Error: Type 'Pointer' not found.
+external Pointer posixCalloc(int num, int size);
+         ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:18:27:
+Error: Type 'Void' not found.
+typedef PosixFreeNative = Void Function(Pointer);
+                          ^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:18:41:
+Error: Type 'Pointer' not found.
+typedef PosixFreeNative = Void Function(Pointer);
+                                        ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:20:9:
+Error: Type 'Void' not found.
+@Native<Void Function(Pointer)>(symbol: 'free')
+        ^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:20:23:
+Error: Type 'Pointer' not found.
+@Native<Void Function(Pointer)>(symbol: 'free')
+                      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:21:25:
+Error: Type 'Pointer' not found.
+external void posixFree(Pointer ptr);
+                        ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:29:35:
+Error: Type 'Pointer' not found.
+typedef WinCoTaskMemAllocNative = Pointer Function(Size);
+                                  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:29:52:
+Error: Type 'Size' not found.
+typedef WinCoTaskMemAllocNative = Pointer Function(Size);
+                                                   ^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:30:29:
+Error: Type 'Pointer' not found.
+typedef WinCoTaskMemAlloc = Pointer Function(int);
+                            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:36:34:
+Error: Type 'Void' not found.
+typedef WinCoTaskMemFreeNative = Void Function(Pointer);
+                                 ^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:36:48:
+Error: Type 'Pointer' not found.
+typedef WinCoTaskMemFreeNative = Void Function(Pointer);
+                                               ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:37:42:
+Error: Type 'Pointer' not found.
+typedef WinCoTaskMemFree = void Function(Pointer);
+                                         ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:49:40:
+Error: Type 'Allocator' not found.
+final class MallocAllocator implements Allocator {
+                                       ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:61:3:
+Error: Type 'Pointer' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:61:33:
+Error: Type 'NativeType' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+                                ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:80:13:
+Error: Type 'Pointer' not found.
+  void free(Pointer pointer) {
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:116:11:
+Error: Type 'NativeFinalizerFunction' not found.
+  Pointer<NativeFinalizerFunction> get nativeFree =>
+          ^^^^^^^^^^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:116:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeFinalizerFunction> get nativeFree =>
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:135:40:
+Error: Type 'Allocator' not found.
+final class CallocAllocator implements Allocator {
+                                       ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:139:20:
+Error: Type 'Pointer' not found.
+  void _fillMemory(Pointer destination, int length, int fill) {
+                   ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:148:20:
+Error: Type 'Pointer' not found.
+  void _zeroMemory(Pointer destination, int length) =>
+                   ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:161:3:
+Error: Type 'Pointer' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:161:33:
+Error: Type 'NativeType' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+                                ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:183:13:
+Error: Type 'Pointer' not found.
+  void free(Pointer pointer) {
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:219:11:
+Error: Type 'NativeFinalizerFunction' not found.
+  Pointer<NativeFinalizerFunction> get nativeFree =>
+          ^^^^^^^^^^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:219:3:
+Error: Type 'Pointer' not found.
+  Pointer<NativeFinalizerFunction> get nativeFree =>
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:24:24:
+Error: Type 'Allocator' not found.
+class Arena implements Allocator {
+                       ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:26:9:
+Error: Type 'Allocator' not found.
+  final Allocator _wrappedAllocator;
+        ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:29:22:
+Error: Type 'NativeType' not found.
+  final List<Pointer<NativeType>> _managedMemoryPointers = [];
+                     ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:29:14:
+Error: Type 'Pointer' not found.
+  final List<Pointer<NativeType>> _managedMemoryPointers = [];
+             ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:40:10:
+Error: Type 'Allocator' not found.
+  Arena([Allocator allocator = calloc]) : _wrappedAllocator = allocator;
+         ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:50:3:
+Error: Type 'Pointer' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:50:33:
+Error: Type 'NativeType' not found.
+  Pointer<T> allocate<T extends NativeType>(int byteCount, {int? alignment}) {
+                                ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:101:21:
+Error: Type 'NativeType' not found.
+  void free(Pointer<NativeType> pointer) {}
+                    ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:101:13:
+Error: Type 'Pointer' not found.
+  void free(Pointer<NativeType> pointer) {}
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:122:3:
+Error: Type 'Allocator' not found.
+  Allocator wrappedAllocator = calloc,
+  ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:148:3:
+Error: Type 'Allocator' not found.
+  Allocator wrappedAllocator = calloc,
+  ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:15:27:
+Error: Type 'Opaque' not found.
+final class Utf16 extends Opaque {}
+                          ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:18:27:
+Error: Type 'Pointer' not found.
+extension Utf16Pointer on Pointer<Utf16> {
+                          ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:51:46:
+Error: Type 'Uint16' not found.
+  static String _toKnownLengthString(Pointer<Uint16> codeUnits, int length) =>
+                                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:51:38:
+Error: Type 'Pointer' not found.
+  static String _toKnownLengthString(Pointer<Uint16> codeUnits, int length) =>
+                                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:54:48:
+Error: Type 'Uint16' not found.
+  static String _toUnknownLengthString(Pointer<Uint16> codeUnits) {
+                                               ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:54:40:
+Error: Type 'Pointer' not found.
+  static String _toUnknownLengthString(Pointer<Uint16> codeUnits) {
+                                       ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:67:30:
+Error: Type 'Uint16' not found.
+  static int _length(Pointer<Uint16> codeUnits) {
+                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:67:22:
+Error: Type 'Pointer' not found.
+  static int _length(Pointer<Uint16> codeUnits) {
+                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:93:3:
+Error: Type 'Pointer' not found.
+  Pointer<Utf16> toNativeUtf16({Allocator allocator = malloc}) {
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:93:33:
+Error: Type 'Allocator' not found.
+  Pointer<Utf16> toNativeUtf16({Allocator allocator = malloc}) {
+                                ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:15:26:
+Error: Type 'Opaque' not found.
+final class Utf8 extends Opaque {}
+                         ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:18:26:
+Error: Type 'Pointer' not found.
+extension Utf8Pointer on Pointer<Utf8> {
+                         ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:51:30:
+Error: Type 'Uint8' not found.
+  static int _length(Pointer<Uint8> codeUnits) {
+                             ^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:51:22:
+Error: Type 'Pointer' not found.
+  static int _length(Pointer<Uint8> codeUnits) {
+                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:81:3:
+Error: Type 'Pointer' not found.
+  Pointer<Utf8> toNativeUtf8({Allocator allocator = malloc}) {
+  ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:81:31:
+Error: Type 'Allocator' not found.
+  Pointer<Utf8> toNativeUtf8({Allocator allocator = malloc}) {
+                              ^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:42:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:45:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:48:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:51:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:57:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:60:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:63:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:66:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:69:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:72:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:75:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:78:4:
+Error: Not a constant expression.
+  @Float()
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:84:4:
+Error: Not a constant expression.
+  @Array(16)
+   ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:90:4:
+Error: Not a constant expression.
+  @Uint32()
+   ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:93:4:
+Error: Not a constant expression.
+  @Uint32()
+   ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:96:4:
+Error: Not a constant expression.
+  @Uint64()
+   ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:10:2:
+Error: Couldn't find constructor 'Native'.
+@Native<PosixMallocNative>(symbol: 'malloc')
+ ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:15:2:
+Error: Couldn't find constructor 'Native'.
+@Native<PosixCallocNative>(symbol: 'calloc')
+ ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:20:9:
+Error: 'Void' isn't a type.
+@Native<Void Function(Pointer)>(symbol: 'free')
+        ^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:20:23:
+Error: 'Pointer' isn't a type.
+@Native<Void Function(Pointer)>(symbol: 'free')
+                      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:20:2:
+Error: Couldn't find constructor 'Native'.
+@Native<Void Function(Pointer)>(symbol: 'free')
+ ^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:20:12:
+Error: Undefined name 'DynamicLibrary'.
+    return DynamicLibrary.open('libvib3_core.so');
+           ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:22:12:
+Error: Undefined name 'DynamicLibrary'.
+    return DynamicLibrary.process();
+           ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:24:12:
+Error: Undefined name 'DynamicLibrary'.
+    return DynamicLibrary.open('libvib3_core.dylib');
+           ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:26:12:
+Error: Undefined name 'DynamicLibrary'.
+    return DynamicLibrary.open('vib3_core.dll');
+           ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:28:12:
+Error: Undefined name 'DynamicLibrary'.
+    return DynamicLibrary.open('libvib3_core.so');
+           ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:34:7:
+Error: 'DynamicLibrary' isn't a type.
+final DynamicLibrary _nativeLib = _loadLibrary();
+      ^^^^^^^^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:85:18:
+Error: 'Float' isn't a type.
+  external Array<Float> data;
+                 ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:85:12:
+Error: 'Array' isn't a type.
+  external Array<Float> data;
+           ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:238:3:
+Error: 'Pointer' isn't a type.
+  Pointer<NativeVec4> _ptr;
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:296:3:
+Error: 'Pointer' isn't a type.
+  Pointer<NativeRotor4D> _ptr;
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:367:3:
+Error: 'Pointer' isn't a type.
+  Pointer<NativeMat4x4> _ptr;
+  ^^^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:489:31:
+Error: 'Uint8' isn't a type.
+    final resultsPtr = calloc<Uint8>(commands.length * 2); // Allocate result buffer
+                              ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:490:32:
+Error: 'Uint8' isn't a type.
+    final commandsPtr = calloc<Uint8>(commands.length);
+                               ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:533:7:
+Error: 'Allocator' isn't a type.
+final Allocator calloc = malloc;
+      ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:21:25:
+Error: 'Pointer' isn't a type.
+external void posixFree(Pointer ptr);
+                        ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:23:15:
+Error: 'NativeFunction' isn't a type.
+final Pointer<NativeFunction<PosixFreeNative>> posixFreePointer =
+              ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:23:7:
+Error: 'Pointer' isn't a type.
+final Pointer<NativeFunction<PosixFreeNative>> posixFreePointer =
+      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:24:5:
+Error: Undefined name 'Native'.
+    Native.addressOf(posixFree);
+    ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:27:7:
+Error: 'DynamicLibrary' isn't a type.
+final DynamicLibrary ole32lib = DynamicLibrary.open('ole32.dll');
+      ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:27:33:
+Error: Undefined name 'DynamicLibrary'.
+final DynamicLibrary ole32lib = DynamicLibrary.open('ole32.dll');
+                                ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:38:15:
+Error: 'NativeFunction' isn't a type.
+final Pointer<NativeFunction<WinCoTaskMemFreeNative>> winCoTaskMemFreePointer =
+              ^^^^^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:38:7:
+Error: 'Pointer' isn't a type.
+final Pointer<NativeFunction<WinCoTaskMemFreeNative>> winCoTaskMemFreePointer =
+      ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:62:5:
+Error: 'Pointer' isn't a type.
+    Pointer<T> result;
+    ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:80:13:
+Error: 'Pointer' isn't a type.
+  void free(Pointer pointer) {
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:139:20:
+Error: 'Pointer' isn't a type.
+  void _fillMemory(Pointer destination, int length, int fill) {
+                   ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:140:34:
+Error: 'Uint8' isn't a type.
+    final ptr = destination.cast<Uint8>();
+                                 ^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:148:20:
+Error: 'Pointer' isn't a type.
+  void _zeroMemory(Pointer destination, int length) =>
+                   ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:162:5:
+Error: 'Pointer' isn't a type.
+    Pointer<T> result;
+    ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:183:13:
+Error: 'Pointer' isn't a type.
+  void free(Pointer pointer) {
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:26:9:
+Error: 'Allocator' isn't a type.
+  final Allocator _wrappedAllocator;
+        ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:29:22:
+Error: 'NativeType' isn't a type.
+  final List<Pointer<NativeType>> _managedMemoryPointers = [];
+                     ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:29:14:
+Error: 'Pointer' isn't a type.
+  final List<Pointer<NativeType>> _managedMemoryPointers = [];
+             ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:40:10:
+Error: 'Allocator' isn't a type.
+  Arena([Allocator allocator = calloc]) : _wrappedAllocator = allocator;
+         ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:101:21:
+Error: 'NativeType' isn't a type.
+  void free(Pointer<NativeType> pointer) {}
+                    ^^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:101:13:
+Error: 'Pointer' isn't a type.
+  void free(Pointer<NativeType> pointer) {}
+            ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:122:3:
+Error: 'Allocator' isn't a type.
+  Allocator wrappedAllocator = calloc,
+  ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/arena.dart:148:3:
+Error: 'Allocator' isn't a type.
+  Allocator wrappedAllocator = calloc,
+  ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:25:28:
+Error: 'Uint16' isn't a type.
+    final codeUnits = cast<Uint16>();
+                           ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:42:28:
+Error: 'Uint16' isn't a type.
+    final codeUnits = cast<Uint16>();
+                           ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:51:46:
+Error: 'Uint16' isn't a type.
+  static String _toKnownLengthString(Pointer<Uint16> codeUnits, int length) =>
+                                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:51:38:
+Error: 'Pointer' isn't a type.
+  static String _toKnownLengthString(Pointer<Uint16> codeUnits, int length) =>
+                                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:54:48:
+Error: 'Uint16' isn't a type.
+  static String _toUnknownLengthString(Pointer<Uint16> codeUnits) {
+                                               ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:54:40:
+Error: 'Pointer' isn't a type.
+  static String _toUnknownLengthString(Pointer<Uint16> codeUnits) {
+                                       ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:67:30:
+Error: 'Uint16' isn't a type.
+  static int _length(Pointer<Uint16> codeUnits) {
+                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:67:22:
+Error: 'Pointer' isn't a type.
+  static int _length(Pointer<Uint16> codeUnits) {
+                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:93:33:
+Error: 'Allocator' isn't a type.
+  Pointer<Utf16> toNativeUtf16({Allocator allocator = malloc}) {
+                                ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf16.dart:95:30:
+Error: 'Uint16' isn't a type.
+    final result = allocator<Uint16>(units.length + 1);
+                             ^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:25:28:
+Error: 'Uint8' isn't a type.
+    final codeUnits = cast<Uint8>();
+                           ^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:42:28:
+Error: 'Uint8' isn't a type.
+    final codeUnits = cast<Uint8>();
+                           ^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:51:30:
+Error: 'Uint8' isn't a type.
+  static int _length(Pointer<Uint8> codeUnits) {
+                             ^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:51:22:
+Error: 'Pointer' isn't a type.
+  static int _length(Pointer<Uint8> codeUnits) {
+                     ^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:81:31:
+Error: 'Allocator' isn't a type.
+  Pointer<Utf8> toNativeUtf8({Allocator allocator = malloc}) {
+                              ^^^^^^^^^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/utf8.dart:83:30:
+Error: 'Uint8' isn't a type.
+    final result = allocator<Uint8>(units.length + 1);
+                             ^^^^^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:43:19:
+Error: Only JS interop members may be 'external'.
+  external double x;
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:46:19:
+Error: Only JS interop members may be 'external'.
+  external double y;
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:49:19:
+Error: Only JS interop members may be 'external'.
+  external double z;
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:52:19:
+Error: Only JS interop members may be 'external'.
+  external double w;
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:58:19:
+Error: Only JS interop members may be 'external'.
+  external double s;    // Scalar
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:61:19:
+Error: Only JS interop members may be 'external'.
+  external double xy;   // Bivector XY
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:64:19:
+Error: Only JS interop members may be 'external'.
+  external double xz;   // Bivector XZ
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:67:19:
+Error: Only JS interop members may be 'external'.
+  external double yz;   // Bivector YZ
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:70:19:
+Error: Only JS interop members may be 'external'.
+  external double xw;   // Bivector XW
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:73:19:
+Error: Only JS interop members may be 'external'.
+  external double yw;   // Bivector YW
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:76:19:
+Error: Only JS interop members may be 'external'.
+  external double zw;   // Bivector ZW
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:79:19:
+Error: Only JS interop members may be 'external'.
+  external double xyzw; // Pseudoscalar
+                  ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:85:25:
+Error: Only JS interop members may be 'external'.
+  external Array<Float> data;
+                        ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:91:16:
+Error: Only JS interop members may be 'external'.
+  external int commandCount;
+               ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:94:16:
+Error: Only JS interop members may be 'external'.
+  external int totalSize;
+               ^
+../vib3codeSDK/flutter/lib/src/ffi/vib3_ffi.dart:97:16:
+Error: Only JS interop members may be 'external'.
+  external int timestamp;
+               ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:11:18:
+Error: Only JS interop members may be 'external'.
+external Pointer posixMalloc(int size);
+                 ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:16:18:
+Error: Only JS interop members may be 'external'.
+external Pointer posixCalloc(int num, int size);
+                 ^
+/home/jules/.pub-cache/hosted/pub.dev/ffi-2.1.5/lib/src/allocation.dart:21:15:
+Error: Only JS interop members may be 'external'.
+external void posixFree(Pointer ptr);
+              ^
+Error: Compilation failed.
+  Command: /opt/flutter/bin/cache/dart-sdk/bin/dart compile js --platform-binaries=/opt/flutter/bin/cache/flutter_web_sdk/kernel --invoker=flutter_tool -Ddart.vm.product=true -DFLUTTER_VERSION=3.38.7 -DFLUTTER_CHANNEL=stable -DFLUTTER_GIT_URL=https://github.com/flutter/flutter.git -DFLUTTER_FRAMEWORK_REVISION=3b62efc2a3 -DFLUTTER_ENGINE_REVISION=78fc3012e4 -DFLUTTER_DART_VERSION=3.10.7 -DFLUTTER_WEB_USE_SKIA=true -DFLUTTER_WEB_USE_SKWASM=false -DFLUTTER_WEB_CANVASKIT_URL=https://www.gstatic.com/flutter-canvaskit/78fc3012e45889657f72359b005af7beac47ba3d/ --native-null-assertions --no-source-maps -O4 --minify -o /app/icosatabolne/.dart_tool/flutter_build/6e95012682054b1bb6bcb1b10f43e664/app.dill --packages=/app/icosatabolne/.dart_tool/package_config.json --cfe-only /app/icosatabolne/.dart_tool/flutter_build/6e95012682054b1bb6bcb1b10f43e664/main.dart
+#0      RunResult.throwException (package:flutter_tools/src/base/process.dart:153:5)
+#1      _DefaultProcessUtils.run (package:flutter_tools/src/base/process.dart:379:19)
+<asynchronous suspension>
+#2      Dart2JSTarget.build (package:flutter_tools/src/build_system/targets/web.dart:207:5)
+<asynchronous suspension>
+#3      _BuildInstance._invokeInternal (package:flutter_tools/src/build_system/build_system.dart:895:9)
+<asynchronous suspension>
+#4      Future.wait.<anonymous closure> (dart:async/future.dart:546:21)
+<asynchronous suspension>
+#5      _BuildInstance.invokeTarget (package:flutter_tools/src/build_system/build_system.dart:833:32)
+<asynchronous suspension>
+#6      Future.wait.<anonymous closure> (dart:async/future.dart:546:21)
+<asynchronous suspension>
+#7      _BuildInstance.invokeTarget (package:flutter_tools/src/build_system/build_system.dart:833:32)
+<asynchronous suspension>
+#8      FlutterBuildSystem.build (package:flutter_tools/src/build_system/build_system.dart:653:16)
+<asynchronous suspension>
+#9      WebBuilder.buildWeb (package:flutter_tools/src/web/compile.dart:94:34)
+<asynchronous suspension>
+#10     BuildWebCommand.runCommand (package:flutter_tools/src/commands/build_web.dart:296:5)
+<asynchronous suspension>
+#11     FlutterCommand.run.<anonymous closure> (package:flutter_tools/src/runner/flutter_command.dart:1559:27)
+<asynchronous suspension>
+#12     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#13     CommandRunner.runCommand (package:args/command_runner.dart:212:13)
+<asynchronous suspension>
+#14     FlutterCommandRunner.runCommand.<anonymous closure> (package:flutter_tools/src/runner/flutter_command_runner.dart:487:9)
+<asynchronous suspension>
+#15     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#16     FlutterCommandRunner.runCommand (package:flutter_tools/src/runner/flutter_command_runner.dart:422:5)
+<asynchronous suspension>
+#17     run.<anonymous closure>.<anonymous closure> (package:flutter_tools/runner.dart:104:11)
+<asynchronous suspension>
+#18     AppContext.run.<anonymous closure> (package:flutter_tools/src/base/context.dart:154:19)
+<asynchronous suspension>
+#19     main (package:flutter_tools/executable.dart:103:3)
+<asynchronous suspension>
+
+Compiling lib/main.dart for the Web...                             51.5s
+Error: Failed to compile application for the Web.

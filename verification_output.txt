@@ -1,0 +1,11 @@
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:import 'package:ffi/ffi.dart';
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:enum RotationPlane {
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:  const RotationPlane(this.value);
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:    return sqrt(x * x + y * y + z * z + w * w);
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:  factory Rotor4D.fromPlaneAngle(RotationPlane plane, double angle) {
+icosatabolne/vib3_flutter/lib/src/ffi/vib3_ffi.dart:  void rotate(RotationPlane plane, double angle) {
+icosatabolne/vib3_flutter/lib/src/widgets/vib3_view.dart:    widget.engine.batchRotate(RotationPlane.xw,
+icosatabolne/vib3_flutter/lib/src/widgets/vib3_view.dart:    widget.engine.batchRotate(RotationPlane.yw,
+icosatabolne/vib3_flutter/lib/src/widgets/vib3_view.dart:      RotationPlane.zw,
+icosatabolne/vib3_flutter/lib/src/widgets/vib3_view.dart:  final List<RotationPlane> activePlanes;
+icosatabolne/vib3_flutter/lib/src/widgets/vib3_view.dart:    this.activePlanes = const [RotationPlane.xw, RotationPlane.yw],

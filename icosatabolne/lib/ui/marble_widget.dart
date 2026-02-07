@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/visuals/vib3_adapter.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/game_config.dart';
 
 class MarbleWidget extends StatelessWidget {
   final Player player;
@@ -41,7 +41,7 @@ class MarbleWidget extends StatelessWidget {
       ),
       child: ClipOval(
         child: Vib3Adapter(
-          config: Vib3Config(
+          config: GameVib3Config(
             system: system,
             geometry: geometry,
             gridDensity: (32 * (1.0 - chaosLevel * 0.5)).toInt().clamp(4, 32),

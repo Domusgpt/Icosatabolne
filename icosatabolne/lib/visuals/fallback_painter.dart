@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vib3_flutter/vib3_flutter.dart';
+import 'package:icosatabolne/visuals/game_config.dart';
 import 'dart:math';
 
 class FallbackPainter extends CustomPainter {
-  final Vib3Config config;
+  final GameVib3Config config;
   final double animationValue;
   final double chaos;
   final double speed;

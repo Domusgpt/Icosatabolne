@@ -251,7 +251,7 @@ packages:
   vib3_flutter:
     dependency: "direct main"
     description:
-      path: "../vib3codeSDK/flutter"
+      path: vib3_flutter
       relative: true
     source: path
     version: "1.7.0"

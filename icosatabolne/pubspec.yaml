@@ -14,7 +14,7 @@ dependencies:
   provider: ^6.1.1
   vector_math: ^2.1.4
   vib3_flutter:
-    path: ../vib3codeSDK/flutter
+    path: ./vib3_flutter
 
 dev_dependencies:
   flutter_test:
