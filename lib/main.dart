@@ -323,12 +323,16 @@ class PlayerCard extends StatelessWidget {
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.w600,
-                  ),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              alignment: Alignment.centerLeft,
+              child: Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
             ),
           ),
           Text(
@@ -366,56 +370,58 @@ class BoardPanel extends StatelessWidget {
       child: AnimatedBuilder(
         animation: pulse,
         builder: (context, child) {
-          return GlassPanel(
-            padding: const EdgeInsets.all(16),
-            child: Container(
-              width: 540,
-              height: 480,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(28),
-                gradient: RadialGradient(
-                  colors: [
-                    const Color(0xFF291C3B),
-                    const Color(0xFF0B0713),
+          return FittedBox(
+            child: GlassPanel(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                width: 540,
+                height: 480,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(28),
+                  gradient: RadialGradient(
+                    colors: [
+                      const Color(0xFF291C3B),
+                      const Color(0xFF0B0713),
+                    ],
+                    radius: 0.9,
+                    center: Alignment(0, -0.3),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.6),
+                      blurRadius: 24,
+                      offset: const Offset(0, 16),
+                    ),
                   ],
-                  radius: 0.9,
-                  center: Alignment(0, -0.3),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.6),
-                    blurRadius: 24,
-                    offset: const Offset(0, 16),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: const Size(double.infinity, double.infinity),
-                    painter: BoardGlowPainter(pulse.value),
-                  ),
-                  ...slots.map(
-                    (slot) {
-                      final isSelected = selection.contains(slot.coordinate);
-                      return Positioned(
-                        left: slot.position.dx,
-                        top: slot.position.dy,
-                        child: MarbleWidget(
-                          slot: slot,
-                          pulse: pulse.value,
-                          onTap: () => onTap(slot),
-                          isActive: slot.owner ==
-                                  (activePlayer == PlayerSide.holographic
-                                      ? MarbleState.holographic
-                                      : MarbleState.quantum) ||
-                              isSelected,
-                          isSelected: isSelected,
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                child: Stack(
+                  children: [
+                    CustomPaint(
+                      size: const Size(double.infinity, double.infinity),
+                      painter: BoardGlowPainter(pulse.value),
+                    ),
+                    ...slots.map(
+                      (slot) {
+                        final isSelected = selection.contains(slot.coordinate);
+                        return Positioned(
+                          left: slot.position.dx,
+                          top: slot.position.dy,
+                          child: MarbleWidget(
+                            slot: slot,
+                            pulse: pulse.value,
+                            onTap: () => onTap(slot),
+                            isActive: slot.owner ==
+                                    (activePlayer == PlayerSide.holographic
+                                        ? MarbleState.holographic
+                                        : MarbleState.quantum) ||
+                                isSelected,
+                            isSelected: isSelected,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -1077,64 +1083,40 @@ class GameState {
     var marble = board.get(coord) ?? MarbleState.empty;
     var isCurrentPlayerMarble =
         (currentPlayer == PlayerSide.holographic && marble == MarbleState.holographic) ||
-        (currentPlayer == PlayerSide.quantum && marble == MarbleState.quantum);
+            (currentPlayer == PlayerSide.quantum && marble == MarbleState.quantum);
 
     if (isCurrentPlayerMarble) {
       if (selection.contains(coord)) {
-        // Toggle off
         selection.remove(coord);
       } else {
-        // Add to selection if inline
-        // If selection is empty, just add
-        // If selection not empty, check validator logic?
-        // MoveValidator handles "validateSelection".
-        // We can just add and see if it is valid.
-
         List<HexCoordinate> nextSelection = List.from(selection)..add(coord);
         MoveValidator validator = MoveValidator(board);
-
-        // Sorting might be needed for validateSelection?
-        // Validator handles unordered but let's check.
-        // My validator assumed simple adjacency checks.
 
         if (validator.validateSelection(nextSelection, currentPlayer)) {
           selection.add(coord);
         } else {
-          // If invalid (e.g. not inline), maybe user wants to start new selection?
-          // If I tap a marble far away, I probably want to select THAT one.
           selection = [coord];
         }
       }
     } else {
-      // Tapped empty or opponent -> potential move target
       if (selection.isNotEmpty) {
-        // Try to move
-        // Determine direction
-        // For inline move, we select tip and tap neighbor.
-        // For broadside, we select line and tap neighbor of one?
-
-        // Let's assume standard UI: drag or tap neighbor.
-        // If tapping a neighbor of any selected marble.
-
-        // Check if `coord` is neighbor of any selected marble
-        Direction? moveDir;
-        for (var s in selection) {
-          var d = s.directionTo(coord);
-          if (d != null) {
-            // Check if this direction makes sense for the whole group?
-            // For broadside, all must move in `d`.
-            // For inline, `d` must be the line direction.
-            moveDir = d;
-            break;
+        MoveValidator validator = MoveValidator(board);
+        for (var dir in Direction.values) {
+          bool targetMatches = false;
+          for (var s in selection) {
+            if (s.neighbor(dir) == coord) {
+              targetMatches = true;
+              break;
+            }
           }
-        }
 
-        if (moveDir != null) {
-          MoveValidator validator = MoveValidator(board);
-          if (validator.validateMove(selection, moveDir, currentPlayer)) {
-            board.executeMove(selection, moveDir);
-            selection.clear();
-            advanceTurn();
+          if (targetMatches) {
+            if (validator.validateMove(selection, dir, currentPlayer)) {
+              board.executeMove(selection, dir);
+              selection.clear();
+              advanceTurn();
+              return;
+            }
           }
         }
       }
