@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:math';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +24,7 @@ class AbaloneVib3App extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.dark,
         fontFamily: 'Roboto',
-        scaffoldBackgroundColor: const Color(0xFF09060F),
+        scaffoldBackgroundColor: const Color(0xFF050308),
         textTheme: const TextTheme(
           displayMedium: TextStyle(
             fontSize: 48,
@@ -54,10 +56,26 @@ class _AbaloneHomeState extends State<AbaloneHome>
     with TickerProviderStateMixin {
   late GameState _gameState;
   late final AnimationController _pulseController;
-  late final Vib3Engine _holoEngine;
-  late final Vib3Engine _quantumEngine;
-  bool _holoReady = false;
-  bool _quantumReady = false;
+
+  // 5-Layer Visualizer Stack
+  // Layer 1: Deep Quantum Field (Shared Background)
+  late final Vib3Engine _deepFieldEngine;
+  // Layer 2: Holographic Base
+  late final Vib3Engine _holoBaseEngine;
+  // Layer 3: Holographic Lattice (Structure)
+  late final Vib3Engine _holoLatticeEngine;
+  // Layer 4: Quantum Base
+  late final Vib3Engine _quantumBaseEngine;
+  // Layer 5: Quantum Lattice (Structure)
+  late final Vib3Engine _quantumLatticeEngine;
+
+  bool _deepFieldReady = false;
+  bool _holoBaseReady = false;
+  bool _holoLatticeReady = false;
+  bool _quantumBaseReady = false;
+  bool _quantumLatticeReady = false;
+
+  final EffectController _effectController = EffectController();
 
   @override
   void initState() {
@@ -68,40 +86,88 @@ class _AbaloneHomeState extends State<AbaloneHome>
       duration: const Duration(milliseconds: 2100),
     )..repeat(reverse: true);
 
-    _holoEngine = Vib3Engine();
-    _quantumEngine = Vib3Engine();
+    _deepFieldEngine = Vib3Engine();
+    _holoBaseEngine = Vib3Engine();
+    _holoLatticeEngine = Vib3Engine();
+    _quantumBaseEngine = Vib3Engine();
+    _quantumLatticeEngine = Vib3Engine();
+
     _initializeEngines();
+
+    // Listen to effect controller to trigger transient updates
+    _effectController.addListener(_onEffectTrigger);
   }
 
   Future<void> _initializeEngines() async {
     if (!mounted) return;
-    if (kIsWeb) return;
+    if (kIsWeb) return; // Skip heavy WebGPU on web for this demo if not supported
+
+    // 1. Deep Field: Slow, fractal, dark
     await _initializeEngine(
-      _holoEngine,
-      const Vib3Config(system: 'holographic', geometry: 9, gridDensity: 48),
-      (value) => setState(() => _holoReady = value),
+      _deepFieldEngine,
+      const Vib3Config(system: 'faceted', geometry: 5 /* Fractal */, gridDensity: 24),
+      (v) => setState(() => _deepFieldReady = v),
+      baseParams: const VisualizerParams(
+        chaos: 0.1, speed: 0.2, density: 0.3, morph: 0.2, hue: 260, intensity: 0.4, saturation: 0.6, geometry: 5, rotation: Vib3Rotation(),
+      ),
     );
+
+    // 2. Holo Base: Torus, glowing
     await _initializeEngine(
-      _quantumEngine,
-      const Vib3Config(system: 'quantum', geometry: 12, gridDensity: 48),
-      (value) => setState(() => _quantumReady = value),
+      _holoBaseEngine,
+      const Vib3Config(system: 'holographic', geometry: 3 /* Torus */, gridDensity: 48),
+      (v) => setState(() => _holoBaseReady = v),
+      baseParams: const VisualizerParams(
+        chaos: 0.2, speed: 0.8, density: 0.6, morph: 0.6, hue: 290, intensity: 0.8, saturation: 0.8, geometry: 3, rotation: Vib3Rotation(),
+      ),
+    );
+
+    // 3. Holo Lattice: Hypercube, sharp, wireframe-like
+    await _initializeEngine(
+      _holoLatticeEngine,
+      const Vib3Config(system: 'holographic', geometry: 1 /* Hypercube */, gridDensity: 32),
+      (v) => setState(() => _holoLatticeReady = v),
+      baseParams: const VisualizerParams(
+        chaos: 0.1, speed: 0.4, density: 0.2, morph: 0.1, hue: 300, intensity: 0.6, saturation: 0.9, geometry: 1, rotation: Vib3Rotation(),
+      ),
+    );
+
+    // 4. Quantum Base: Sphere/Wave, fluid
+    await _initializeEngine(
+      _quantumBaseEngine,
+      const Vib3Config(system: 'quantum', geometry: 6 /* Wave */, gridDensity: 48),
+      (v) => setState(() => _quantumBaseReady = v),
+      baseParams: const VisualizerParams(
+        chaos: 0.3, speed: 0.9, density: 0.5, morph: 0.7, hue: 200, intensity: 0.8, saturation: 0.7, geometry: 6, rotation: Vib3Rotation(),
+      ),
+    );
+
+    // 5. Quantum Lattice: Crystal, structured
+    await _initializeEngine(
+      _quantumLatticeEngine,
+      const Vib3Config(system: 'quantum', geometry: 7 /* Crystal */, gridDensity: 32),
+      (v) => setState(() => _quantumLatticeReady = v),
+      baseParams: const VisualizerParams(
+        chaos: 0.2, speed: 0.5, density: 0.3, morph: 0.2, hue: 190, intensity: 0.7, saturation: 0.8, geometry: 7, rotation: Vib3Rotation(),
+      ),
     );
   }
 
   Future<void> _initializeEngine(
     Vib3Engine engine,
     Vib3Config config,
-    ValueChanged<bool> onReady,
-  ) async {
+    ValueChanged<bool> onReady, {
+    required VisualizerParams baseParams,
+  }) async {
     try {
       await engine.initialize(config);
       await engine.setVisualParams(
-        morphFactor: 0.6,
-        chaos: 0.2,
-        speed: 0.8,
-        hue: config.system == 'holographic' ? 290 : 200,
-        intensity: 0.9,
-        saturation: 0.8,
+        morphFactor: baseParams.morph,
+        chaos: baseParams.chaos,
+        speed: baseParams.speed,
+        hue: baseParams.hue,
+        intensity: baseParams.intensity,
+        saturation: baseParams.saturation,
       );
       await engine.startRendering();
       onReady(true);
@@ -113,9 +179,20 @@ class _AbaloneHomeState extends State<AbaloneHome>
   @override
   void dispose() {
     _pulseController.dispose();
-    _holoEngine.dispose();
-    _quantumEngine.dispose();
+    _deepFieldEngine.dispose();
+    _holoBaseEngine.dispose();
+    _holoLatticeEngine.dispose();
+    _quantumBaseEngine.dispose();
+    _quantumLatticeEngine.dispose();
+    _effectController.removeListener(_onEffectTrigger);
+    _effectController.dispose();
     super.dispose();
+  }
+
+  void _onEffectTrigger() {
+    // Transient effect triggered (e.g. ripple)
+    // We can spike parameters momentarily
+    _syncEngines(impulse: _effectController.currentImpulse);
   }
 
   void _onTap(BoardSlot slot) {
@@ -128,44 +205,83 @@ class _AbaloneHomeState extends State<AbaloneHome>
         : HapticFeedback.mediumImpact;
     hapticStrength();
 
-    _syncEngines();
+    // Trigger visual impulse
+    _effectController.triggerImpulse(0.5); // Medium impulse
+    _syncEngines(impulse: 0.5);
   }
 
-  void _syncEngines() {
+  void _syncEngines({double impulse = 0.0}) {
     final holoParams = _gameState.visualParamsFor(PlayerSide.holographic);
     final quantumParams = _gameState.visualParamsFor(PlayerSide.quantum);
 
-    if (_holoEngine.isInitialized) {
-      _holoEngine.setVisualParams(
-        morphFactor: holoParams.morph,
-        chaos: holoParams.chaos,
-        speed: holoParams.speed,
-        hue: holoParams.hue,
-        intensity: holoParams.intensity,
-        saturation: holoParams.saturation,
+    // Apply impulse to parameters (spike speed/chaos)
+    final impulseChaos = impulse * 0.4;
+    final impulseSpeed = impulse * 0.8;
+    final impulseIntensity = impulse * 0.3;
+
+    // Deep Field (Layer 1) - Subtle reaction
+    if (_deepFieldReady) {
+      _deepFieldEngine.setVisualParams(
+        speed: 0.2 + impulseSpeed * 0.1,
+        chaos: 0.1 + impulseChaos * 0.1,
       );
-      _holoEngine.setRotation(holoParams.rotation);
-      _holoEngine.setGeometry(holoParams.geometry);
+      _deepFieldEngine.rotate(RotationPlane.xy, 0.001 + impulse * 0.01);
     }
 
-    if (_quantumEngine.isInitialized) {
-      _quantumEngine.setVisualParams(
+    // Holo Stack (Layers 2 & 3)
+    if (_holoBaseReady) {
+      _holoBaseEngine.setVisualParams(
+        morphFactor: holoParams.morph,
+        chaos: (holoParams.chaos + impulseChaos).clamp(0.0, 1.0),
+        speed: (holoParams.speed + impulseSpeed).clamp(0.0, 2.0),
+        hue: holoParams.hue,
+        intensity: (holoParams.intensity + impulseIntensity).clamp(0.0, 1.0),
+        saturation: holoParams.saturation,
+      );
+      _holoBaseEngine.setRotation(holoParams.rotation);
+      // Change geometry based on game state if needed, or keep base
+    }
+    if (_holoLatticeReady) {
+      // Lattice rotates differently/counter to base
+      _holoLatticeEngine.setVisualParams(
+        morphFactor: holoParams.morph * 0.5,
+        chaos: (holoParams.chaos * 0.5 + impulseChaos).clamp(0.0, 1.0),
+        speed: (holoParams.speed * 0.5 + impulseSpeed).clamp(0.0, 2.0),
+        hue: holoParams.hue + 20, // Offset hue for depth
+        intensity: (holoParams.intensity * 0.8 + impulseIntensity).clamp(0.0, 1.0),
+        saturation: holoParams.saturation,
+      );
+      _holoLatticeEngine.rotate(RotationPlane.xz, holoParams.rotation.xz * -1.2); // Counter-rotate
+    }
+
+    // Quantum Stack (Layers 4 & 5)
+    if (_quantumBaseReady) {
+      _quantumBaseEngine.setVisualParams(
         morphFactor: quantumParams.morph,
-        chaos: quantumParams.chaos,
-        speed: quantumParams.speed,
+        chaos: (quantumParams.chaos + impulseChaos).clamp(0.0, 1.0),
+        speed: (quantumParams.speed + impulseSpeed).clamp(0.0, 2.0),
         hue: quantumParams.hue,
-        intensity: quantumParams.intensity,
+        intensity: (quantumParams.intensity + impulseIntensity).clamp(0.0, 1.0),
         saturation: quantumParams.saturation,
       );
-      _quantumEngine.setRotation(quantumParams.rotation);
-      _quantumEngine.setGeometry(quantumParams.geometry);
+      _quantumBaseEngine.setRotation(quantumParams.rotation);
+    }
+    if (_quantumLatticeReady) {
+      _quantumLatticeEngine.setVisualParams(
+        morphFactor: quantumParams.morph * 0.5,
+        chaos: (quantumParams.chaos * 0.5 + impulseChaos).clamp(0.0, 1.0),
+        speed: (quantumParams.speed * 0.5 + impulseSpeed).clamp(0.0, 2.0),
+        hue: quantumParams.hue - 20,
+        intensity: (quantumParams.intensity * 0.8 + impulseIntensity).clamp(0.0, 1.0),
+        saturation: quantumParams.saturation,
+      );
+      _quantumLatticeEngine.rotate(RotationPlane.yz, quantumParams.rotation.yz * -1.2);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final boardState = _gameState;
-    // Generate slots from board for UI
     final slots = boardState.getSlots();
 
     return Scaffold(
@@ -173,7 +289,16 @@ class _AbaloneHomeState extends State<AbaloneHome>
         child: Stack(
           children: [
             const VaporwaveBackdrop(),
-            // Board Layer (Centered)
+            // Layer 1: Deep Field (Global Background, very subtle)
+            if (_deepFieldReady)
+              Positioned.fill(
+                child: Opacity(
+                  opacity: 0.3,
+                  child: Vib3View(engine: _deepFieldEngine),
+                ),
+              ),
+
+            // Board Area with Multi-Layered Visualizers
             Center(
               child: AspectRatio(
                 aspectRatio: 1.0,
@@ -187,16 +312,22 @@ class _AbaloneHomeState extends State<AbaloneHome>
                       pulse: _pulseController,
                       activePlayer: boardState.currentPlayer,
                       selection: boardState.selection,
-                      holoEngine: _holoEngine,
-                      quantumEngine: _quantumEngine,
-                      holoReady: _holoReady,
-                      quantumReady: _quantumReady,
+                      // Pass all engines
+                      holoBaseEngine: _holoBaseEngine,
+                      holoLatticeEngine: _holoLatticeEngine,
+                      quantumBaseEngine: _quantumBaseEngine,
+                      quantumLatticeEngine: _quantumLatticeEngine,
+                      holoBaseReady: _holoBaseReady,
+                      holoLatticeReady: _holoLatticeReady,
+                      quantumBaseReady: _quantumBaseReady,
+                      quantumLatticeReady: _quantumLatticeReady,
                     ),
                   ),
                 ),
               ),
             ),
-            // HUD Layer (Top/Bottom Overlay)
+
+            // HUD
             Column(
               children: [
                 HeaderHUD(
@@ -220,6 +351,27 @@ class _AbaloneHomeState extends State<AbaloneHome>
   }
 }
 
+class EffectController extends ChangeNotifier {
+  double _currentImpulse = 0.0;
+  Timer? _decayTimer;
+
+  double get currentImpulse => _currentImpulse;
+
+  void triggerImpulse(double magnitude) {
+    _currentImpulse = magnitude.clamp(0.0, 1.0);
+    notifyListeners();
+    _decayTimer?.cancel();
+    _decayTimer = Timer.periodic(const Duration(milliseconds: 16), (timer) {
+      _currentImpulse *= 0.9; // Decay
+      if (_currentImpulse < 0.01) {
+        _currentImpulse = 0.0;
+        timer.cancel();
+      }
+      notifyListeners();
+    });
+  }
+}
+
 class BoardPanel extends StatelessWidget {
   const BoardPanel({
     super.key,
@@ -228,10 +380,14 @@ class BoardPanel extends StatelessWidget {
     required this.pulse,
     required this.activePlayer,
     required this.selection,
-    required this.holoEngine,
-    required this.quantumEngine,
-    required this.holoReady,
-    required this.quantumReady,
+    required this.holoBaseEngine,
+    required this.holoLatticeEngine,
+    required this.quantumBaseEngine,
+    required this.quantumLatticeEngine,
+    required this.holoBaseReady,
+    required this.holoLatticeReady,
+    required this.quantumBaseReady,
+    required this.quantumLatticeReady,
   });
 
   final List<BoardSlot> slots;
@@ -239,38 +395,81 @@ class BoardPanel extends StatelessWidget {
   final Animation<double> pulse;
   final PlayerSide activePlayer;
   final List<HexCoordinate> selection;
-  final Vib3Engine holoEngine;
-  final Vib3Engine quantumEngine;
-  final bool holoReady;
-  final bool quantumReady;
+
+  final Vib3Engine holoBaseEngine;
+  final Vib3Engine holoLatticeEngine;
+  final Vib3Engine quantumBaseEngine;
+  final Vib3Engine quantumLatticeEngine;
+  final bool holoBaseReady;
+  final bool holoLatticeReady;
+  final bool quantumBaseReady;
+  final bool quantumLatticeReady;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // Visualizer Layers (Behind the board, clipped to marbles)
-        if (holoReady)
+        // --------------------------------------------------------------------
+        // VISUALIZER STACKS (Negative Space)
+        // --------------------------------------------------------------------
+
+        // HOLOGRAPHIC STACK (Layers 2 & 3)
+        // Clipped to Holo marbles
+        if (holoBaseReady)
           Positioned.fill(
             child: ClipPath(
               clipper: MarbleClipper(slots, MarbleState.holographic),
-              child: Vib3View(engine: holoEngine),
-            ),
-          ),
-        if (quantumReady)
-          Positioned.fill(
-            child: ClipPath(
-              clipper: MarbleClipper(slots, MarbleState.quantum),
-              child: Vib3View(engine: quantumEngine),
+              child: Stack(
+                children: [
+                  // Base Layer (Torus/Flow)
+                  Positioned.fill(child: Vib3View(engine: holoBaseEngine)),
+                  // Lattice Layer (Hypercube/Wireframe) - Blended
+                  if (holoLatticeReady)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.6,
+                        child: Vib3View(engine: holoLatticeEngine),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
 
-        // Grid Lines (Subtle glow behind slots)
+        // QUANTUM STACK (Layers 4 & 5)
+        // Clipped to Quantum marbles
+        if (quantumBaseReady)
+          Positioned.fill(
+            child: ClipPath(
+              clipper: MarbleClipper(slots, MarbleState.quantum),
+              child: Stack(
+                children: [
+                  // Base Layer (Wave/Fluid)
+                  Positioned.fill(child: Vib3View(engine: quantumBaseEngine)),
+                  // Lattice Layer (Crystal/Structure) - Blended
+                  if (quantumLatticeReady)
+                    Positioned.fill(
+                      child: Opacity(
+                        opacity: 0.6,
+                        child: Vib3View(engine: quantumLatticeEngine),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+
+        // --------------------------------------------------------------------
+        // BOARD UI OVERLAY
+        // --------------------------------------------------------------------
+
+        // Grid Glow
         CustomPaint(
           size: const Size(double.infinity, double.infinity),
           painter: BoardGlowPainter(pulse.value),
         ),
 
-        // Slots (Interactive Lenses)
+        // Interactive Slots (Lenses)
         ...slots.map((slot) {
           final isSelected = selection.contains(slot.coordinate);
           final isActive = slot.owner ==
@@ -296,6 +495,9 @@ class BoardPanel extends StatelessWidget {
   }
 }
 
+// ... MarbleClipper, MarbleLensWidget, HeaderHUD, FooterHUD, etc. remain mostly the same
+// but including them for completeness of the file rewrite.
+
 class MarbleClipper extends CustomClipper<Path> {
   final List<BoardSlot> slots;
   final MarbleState targetOwner;
@@ -308,7 +510,6 @@ class MarbleClipper extends CustomClipper<Path> {
     final path = Path();
     for (final slot in slots) {
       if (slot.owner == targetOwner) {
-        // Offset slot position by marble radius to center it (slot.position is top-left of widget)
         final center = slot.position + const Offset(26, 26);
         path.addOval(Rect.fromCircle(center: center, radius: radius));
       }
@@ -318,8 +519,6 @@ class MarbleClipper extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(covariant MarbleClipper oldClipper) {
-    // Reclip if slots changed (e.g., marbles moved)
-    // Checking length or ownership changes
     if (oldClipper.slots.length != slots.length) return true;
     for (int i = 0; i < slots.length; i++) {
       if (oldClipper.slots[i].owner != slots[i].owner) return true;
@@ -346,16 +545,12 @@ class MarbleLensWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // The widget itself is just the rim/lens effect and interaction handler.
-    // The "content" is revealed by the Clipper in the parent stack.
-
     final rimColor = slot.owner == MarbleState.holographic
         ? const Color(0xFFB06DFF)
         : slot.owner == MarbleState.quantum
             ? const Color(0xFF39B6FF)
             : Colors.transparent;
 
-    // Empty slots are just dim indicators
     if (slot.owner == MarbleState.empty) {
       return GestureDetector(
         onTap: onTap,
@@ -379,7 +574,6 @@ class MarbleLensWidget extends StatelessWidget {
         height: 52,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          // Glassy rim
           border: Border.all(
             color: isSelected ? Colors.white : rimColor.withOpacity(0.5),
             width: isSelected ? 2 : 1.5,
@@ -397,7 +591,7 @@ class MarbleLensWidget extends StatelessWidget {
           decoration: const BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              colors: [Colors.transparent, Colors.white12], // Subtle lens reflection
+              colors: [Colors.transparent, Colors.white12],
               stops: [0.7, 1.0],
             ),
           ),
@@ -620,7 +814,6 @@ class BoardGlowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    // Subtle grid glow behind the board
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
@@ -646,7 +839,6 @@ class VaporwaveGridPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     const spacing = 42.0;
-    // Horizon perspective effect
     for (var x = 0.0; x < size.width; x += spacing) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
     }
