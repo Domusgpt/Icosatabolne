@@ -2,21 +2,26 @@
 
 A Flutter-based digital version of Abalone with holographic/quantum visualizer effects powered by `vib3codeSDK`.
 
-## Status
-**Blocked:** The Android build is currently failing due to missing C++ source files in the `vib3_flutter` SDK dependency.
-- **Missing Files:** `geometry/GeometryGenerator.cpp`, `tests/Vec4_test.cpp`, `tests/Geometry_test.cpp`.
-- **Impact:** `flutter build apk` fails with `CMake Error`.
-- **Workaround:** The project code (Dart) is complete and verified with `flutter test`. UI logic is fully implemented.
-
 ## Features
-- Full Abalone game logic (Hexagonal grid, Sumito pushing, broadside/inline moves).
-- Reactive Visualizer Integration:
-  - Holographic vs Quantum player themes.
-  - Dynamic shader parameters (chaos, speed, density) based on game state (winning/losing).
-- Polished UI with glassmorphism and vaporwave aesthetics.
+- **Full Abalone Game Logic**: Hexagonal grid, Sumito pushing, broadside/inline moves, and precise move validation.
+- **Reactive Visualizer**:
+  - **Holographic Theme**: Purple/Cyan palette with geometric stability.
+  - **Quantum Theme**: Blue/Green palette with chaotic flux.
+  - **Dynamic Parameters**: Visuals (chaos, speed, density) react procedurally to game state (winning/losing).
+- **Polished UI**: Glassmorphism, vaporwave aesthetics, and responsive layout.
+- **Cross-Platform**: Builds for Android and Web.
+
+## Build Status
+- **Android APK**: The build is fully functional using the latest `vib3_flutter` SDK.
+- **Web**: Deploys to GitHub Pages.
 
 ## Development
 Run tests:
 ```bash
 flutter test
+```
+
+Build APK:
+```bash
+flutter build apk --release
 ```

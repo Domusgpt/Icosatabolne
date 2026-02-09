@@ -212,8 +212,8 @@ packages:
     dependency: "direct main"
     description:
       path: flutter
-      ref: "fix/sdk-integration-missing-files-18347237250635644954"
-      resolved-ref: c9d1030dd3f2f69580d5d8298948225db080ec29
+      ref: main
+      resolved-ref: "9e9f8dfe4e8c9c718c702a47cedb01d94d94c497"
       url: "https://github.com/Domusgpt/vib3codeSDKv3.0.0.git"
     source: git
     version: "1.7.0"
