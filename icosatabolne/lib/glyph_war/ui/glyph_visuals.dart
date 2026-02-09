@@ -93,22 +93,32 @@ class GlyphVisualController extends ChangeNotifier {
   bool _initialized = false;
   bool get isInitialized => _initialized;
 
+  String? _error;
+  String? get error => _error;
+
   Future<void> initialize() async {
     if (_initialized) return;
+    _error = null;
+    notifyListeners();
 
-    await Future.wait([
-      boardEngine.initialize(kBoardConfig),
-      glyphEngine.initialize(kGlyphConfig),
-      bezelEngine.initialize(kBezelConfig),
-    ]);
+    try {
+      await Future.wait([
+        boardEngine.initialize(kBoardConfig),
+        glyphEngine.initialize(kGlyphConfig),
+        bezelEngine.initialize(kBezelConfig),
+      ]);
 
-    await Future.wait([
-      boardEngine.startRendering(),
-      glyphEngine.startRendering(),
-      bezelEngine.startRendering(),
-    ]);
+      await Future.wait([
+        boardEngine.startRendering(),
+        glyphEngine.startRendering(),
+        bezelEngine.startRendering(),
+      ]);
 
-    _initialized = true;
+      _initialized = true;
+    } catch (e) {
+      _error = e.toString();
+      debugPrint("Vib3 Engine Initialization Failed: $e");
+    }
     notifyListeners();
   }
 
