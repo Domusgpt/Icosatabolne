@@ -23,6 +23,20 @@ class AbaloneVib3App extends StatelessWidget {
         brightness: Brightness.dark,
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: const Color(0xFF09060F),
+        textTheme: const TextTheme(
+          displayMedium: TextStyle(
+            fontSize: 48,
+            fontWeight: FontWeight.w300,
+            letterSpacing: -1.0,
+            color: Colors.white,
+          ),
+          titleMedium: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 1.2,
+            color: Colors.white,
+          ),
+        ),
       ),
       home: const AbaloneHome(),
     );
@@ -159,190 +173,48 @@ class _AbaloneHomeState extends State<AbaloneHome>
         child: Stack(
           children: [
             const VaporwaveBackdrop(),
+            // Board Layer (Centered)
+            Center(
+              child: AspectRatio(
+                aspectRatio: 1.0,
+                child: FittedBox(
+                  child: SizedBox(
+                    width: 600,
+                    height: 520,
+                    child: BoardPanel(
+                      slots: slots,
+                      onTap: _onTap,
+                      pulse: _pulseController,
+                      activePlayer: boardState.currentPlayer,
+                      selection: boardState.selection,
+                      holoEngine: _holoEngine,
+                      quantumEngine: _quantumEngine,
+                      holoReady: _holoReady,
+                      quantumReady: _quantumReady,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            // HUD Layer (Top/Bottom Overlay)
             Column(
               children: [
-                HeaderPanel(
+                HeaderHUD(
                   currentPlayer: boardState.currentPlayer,
                   holoScore: boardState.holoCaptured,
                   quantumScore: boardState.quantumCaptured,
                 ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: VisualizerPanel(
-                          title: 'Holographic',
-                          palette: const [
-                            Color(0xFF8E4DFF),
-                            Color(0xFF36F9F6),
-                            Color(0xFFFF8BF5),
-                          ],
-                          engine: _holoEngine,
-                          isReady: _holoReady,
-                          pulse: _pulseController,
-                          params: boardState
-                              .visualParamsFor(PlayerSide.holographic),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 2,
-                        child: BoardPanel(
-                          slots: slots,
-                          onTap: _onTap,
-                          pulse: _pulseController,
-                          activePlayer: boardState.currentPlayer,
-                          selection: boardState.selection,
-                        ),
-                      ),
-                      Expanded(
-                        child: VisualizerPanel(
-                          title: 'Quantum',
-                          palette: const [
-                            Color(0xFF2A9DF4),
-                            Color(0xFF00FFC6),
-                            Color(0xFF58C5FF),
-                          ],
-                          engine: _quantumEngine,
-                          isReady: _quantumReady,
-                          pulse: _pulseController,
-                          params: boardState
-                              .visualParamsFor(PlayerSide.quantum),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                FooterPanel(
+                const Spacer(),
+                FooterHUD(
                   activePlayer: boardState.currentPlayer,
-                  holoCaptured: boardState.holoCaptured,
-                  quantumCaptured: boardState.quantumCaptured,
+                  holoParams: boardState.visualParamsFor(PlayerSide.holographic),
+                  quantumParams: boardState.visualParamsFor(PlayerSide.quantum),
                 ),
               ],
             ),
             const ChromaticAberrationOverlay(),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class HeaderPanel extends StatelessWidget {
-  const HeaderPanel({
-    super.key,
-    required this.currentPlayer,
-    required this.holoScore,
-    required this.quantumScore,
-  });
-
-  final PlayerSide currentPlayer;
-  final int holoScore;
-  final int quantumScore;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 20, 24, 12),
-      child: GlassPanel(
-        child: Row(
-          children: [
-            Expanded(
-              child: PlayerCard(
-                title: 'Holographic',
-                score: holoScore,
-                isActive: currentPlayer == PlayerSide.holographic,
-                accent: const Color(0xFF8E4DFF),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: PlayerCard(
-                title: 'Quantum',
-                score: quantumScore,
-                isActive: currentPlayer == PlayerSide.quantum,
-                accent: const Color(0xFF2A9DF4),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class PlayerCard extends StatelessWidget {
-  const PlayerCard({
-    super.key,
-    required this.title,
-    required this.score,
-    required this.isActive,
-    required this.accent,
-  });
-
-  final String title;
-  final int score;
-  final bool isActive;
-  final Color accent;
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 400),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isActive ? accent : Colors.white24,
-          width: isActive ? 2 : 1,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: accent.withOpacity(isActive ? 0.5 : 0.2),
-            blurRadius: isActive ? 24 : 12,
-            offset: const Offset(0, 10),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 14,
-            height: 14,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [accent, Colors.white],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: accent.withOpacity(0.7),
-                  blurRadius: 14,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              alignment: Alignment.centerLeft,
-              child: Text(
-                title,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      letterSpacing: 1.2,
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-            ),
-          ),
-          Text(
-            score.toString().padLeft(2, '0'),
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: accent,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
       ),
     );
   }
@@ -356,6 +228,10 @@ class BoardPanel extends StatelessWidget {
     required this.pulse,
     required this.activePlayer,
     required this.selection,
+    required this.holoEngine,
+    required this.quantumEngine,
+    required this.holoReady,
+    required this.quantumReady,
   });
 
   final List<BoardSlot> slots;
@@ -363,76 +239,97 @@ class BoardPanel extends StatelessWidget {
   final Animation<double> pulse;
   final PlayerSide activePlayer;
   final List<HexCoordinate> selection;
+  final Vib3Engine holoEngine;
+  final Vib3Engine quantumEngine;
+  final bool holoReady;
+  final bool quantumReady;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: AnimatedBuilder(
-        animation: pulse,
-        builder: (context, child) {
-          return FittedBox(
-            child: GlassPanel(
-              padding: const EdgeInsets.all(16),
-              child: Container(
-                width: 540,
-                height: 480,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(28),
-                  gradient: RadialGradient(
-                    colors: [
-                      const Color(0xFF291C3B),
-                      const Color(0xFF0B0713),
-                    ],
-                    radius: 0.9,
-                    center: Alignment(0, -0.3),
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.6),
-                      blurRadius: 24,
-                      offset: const Offset(0, 16),
-                    ),
-                  ],
-                ),
-                child: Stack(
-                  children: [
-                    CustomPaint(
-                      size: const Size(double.infinity, double.infinity),
-                      painter: BoardGlowPainter(pulse.value),
-                    ),
-                    ...slots.map(
-                      (slot) {
-                        final isSelected = selection.contains(slot.coordinate);
-                        return Positioned(
-                          left: slot.position.dx,
-                          top: slot.position.dy,
-                          child: MarbleWidget(
-                            slot: slot,
-                            pulse: pulse.value,
-                            onTap: () => onTap(slot),
-                            isActive: slot.owner ==
-                                    (activePlayer == PlayerSide.holographic
-                                        ? MarbleState.holographic
-                                        : MarbleState.quantum) ||
-                                isSelected,
-                            isSelected: isSelected,
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+    return Stack(
+      children: [
+        // Visualizer Layers (Behind the board, clipped to marbles)
+        if (holoReady)
+          Positioned.fill(
+            child: ClipPath(
+              clipper: MarbleClipper(slots, MarbleState.holographic),
+              child: Vib3View(engine: holoEngine),
+            ),
+          ),
+        if (quantumReady)
+          Positioned.fill(
+            child: ClipPath(
+              clipper: MarbleClipper(slots, MarbleState.quantum),
+              child: Vib3View(engine: quantumEngine),
+            ),
+          ),
+
+        // Grid Lines (Subtle glow behind slots)
+        CustomPaint(
+          size: const Size(double.infinity, double.infinity),
+          painter: BoardGlowPainter(pulse.value),
+        ),
+
+        // Slots (Interactive Lenses)
+        ...slots.map((slot) {
+          final isSelected = selection.contains(slot.coordinate);
+          final isActive = slot.owner ==
+                  (activePlayer == PlayerSide.holographic
+                      ? MarbleState.holographic
+                      : MarbleState.quantum) ||
+              isSelected;
+
+          return Positioned(
+            left: slot.position.dx,
+            top: slot.position.dy,
+            child: MarbleLensWidget(
+              slot: slot,
+              pulse: pulse.value,
+              onTap: () => onTap(slot),
+              isActive: isActive,
+              isSelected: isSelected,
             ),
           );
-        },
-      ),
+        }),
+      ],
     );
   }
 }
 
-class MarbleWidget extends StatelessWidget {
-  const MarbleWidget({
+class MarbleClipper extends CustomClipper<Path> {
+  final List<BoardSlot> slots;
+  final MarbleState targetOwner;
+  final double radius;
+
+  MarbleClipper(this.slots, this.targetOwner, {this.radius = 26.0});
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    for (final slot in slots) {
+      if (slot.owner == targetOwner) {
+        // Offset slot position by marble radius to center it (slot.position is top-left of widget)
+        final center = slot.position + const Offset(26, 26);
+        path.addOval(Rect.fromCircle(center: center, radius: radius));
+      }
+    }
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant MarbleClipper oldClipper) {
+    // Reclip if slots changed (e.g., marbles moved)
+    // Checking length or ownership changes
+    if (oldClipper.slots.length != slots.length) return true;
+    for (int i = 0; i < slots.length; i++) {
+      if (oldClipper.slots[i].owner != slots[i].owner) return true;
+    }
+    return oldClipper.targetOwner != targetOwner;
+  }
+}
+
+class MarbleLensWidget extends StatelessWidget {
+  const MarbleLensWidget({
     super.key,
     required this.slot,
     required this.pulse,
@@ -449,14 +346,30 @@ class MarbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final palette = slot.owner == MarbleState.holographic
-        ? const [Color(0xFFB06DFF), Color(0xFF4DF3FF)]
+    // The widget itself is just the rim/lens effect and interaction handler.
+    // The "content" is revealed by the Clipper in the parent stack.
+
+    final rimColor = slot.owner == MarbleState.holographic
+        ? const Color(0xFFB06DFF)
         : slot.owner == MarbleState.quantum
-            ? const [Color(0xFF39B6FF), Color(0xFF00FFD1)]
-            : const [Color(0xFF3D3651), Color(0xFF14111E)];
-    final glow = slot.owner == MarbleState.empty
-        ? Colors.white24
-        : palette.first.withOpacity(0.8);
+            ? const Color(0xFF39B6FF)
+            : Colors.transparent;
+
+    // Empty slots are just dim indicators
+    if (slot.owner == MarbleState.empty) {
+      return GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white10, width: 1),
+            color: Colors.white.withOpacity(0.02),
+          ),
+        ),
+      );
+    }
 
     return GestureDetector(
       onTap: onTap,
@@ -466,58 +379,27 @@ class MarbleWidget extends StatelessWidget {
         height: 52,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
+          // Glassy rim
+          border: Border.all(
+            color: isSelected ? Colors.white : rimColor.withOpacity(0.5),
+            width: isSelected ? 2 : 1.5,
+          ),
           boxShadow: [
-            BoxShadow(
-              color: glow.withOpacity((isActive || isSelected) ? 0.9 : 0.5),
-              blurRadius: (isActive || isSelected) ? 18 + pulse * 10 : 12,
-              offset: const Offset(0, 6),
-            ),
+            if (isActive || isSelected)
+              BoxShadow(
+                color: rimColor.withOpacity(0.6),
+                blurRadius: 16 + pulse * 8,
+                spreadRadius: 2,
+              ),
           ],
-          border: isSelected
-              ? Border.all(color: Colors.white, width: 2)
-              : null,
         ),
-        child: ClipOval(
-          child: Stack(
-            children: [
-              DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    colors: palette,
-                    radius: 0.9,
-                    center: Alignment(0.2, -0.2),
-                  ),
-                ),
-              ),
-              Opacity(
-                opacity: 0.6,
-                child: CustomPaint(
-                  painter: MarbleShaderPainter(
-                    seed: slot.seed,
-                    pulse: pulse,
-                    isEmpty: slot.owner == MarbleState.empty,
-                  ),
-                ),
-              ),
-              if (slot.owner != MarbleState.empty)
-                Align(
-                  alignment: Alignment.center,
-                  child: Container(
-                    width: 16,
-                    height: 16,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withOpacity(0.4),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.white.withOpacity(0.6),
-                          blurRadius: 12,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
+        child: Container(
+          decoration: const BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              colors: [Colors.transparent, Colors.white12], // Subtle lens reflection
+              stops: [0.7, 1.0],
+            ),
           ),
         ),
       ),
@@ -525,135 +407,63 @@ class MarbleWidget extends StatelessWidget {
   }
 }
 
-// ... VisualizerPanel, ShaderStats, PlaceholderShader, FooterPanel ...
-// (I will retain these as they are good visual scaffolding, but updating FooterPanel)
-
-class VisualizerPanel extends StatelessWidget {
-  const VisualizerPanel({
+class HeaderHUD extends StatelessWidget {
+  const HeaderHUD({
     super.key,
-    required this.title,
-    required this.palette,
-    required this.engine,
-    required this.isReady,
-    required this.pulse,
-    required this.params,
+    required this.currentPlayer,
+    required this.holoScore,
+    required this.quantumScore,
   });
 
-  final String title;
-  final List<Color> palette;
-  final Vib3Engine engine;
-  final bool isReady;
-  final Animation<double> pulse;
-  final VisualizerParams params;
+  final PlayerSide currentPlayer;
+  final int holoScore;
+  final int quantumScore;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: GlassPanel(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: palette.first,
-                    boxShadow: [
-                      BoxShadow(
-                        color: palette.first.withOpacity(0.7),
-                        blurRadius: 14,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        letterSpacing: 1.6,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: AnimatedBuilder(
-                animation: pulse,
-                builder: (context, child) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      gradient: LinearGradient(
-                        colors: [
-                          palette.first.withOpacity(0.35),
-                          palette.last.withOpacity(0.12),
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
-                      border: Border.all(
-                        color: palette.first.withOpacity(0.6),
-                      ),
-                    ),
-                    child: Stack(
-                      children: [
-                        if (isReady)
-                          Vib3View(engine: engine)
-                        else
-                          PlaceholderShader(
-                            palette: palette,
-                            pulse: pulse.value,
-                            params: params,
-                          ),
-                        Positioned(
-                          left: 16,
-                          bottom: 16,
-                          right: 16,
-                          child: ShaderStats(params: params),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.black.withOpacity(0.8), Colors.transparent],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
         ),
       ),
-    );
-  }
-}
-
-class ShaderStats extends StatelessWidget {
-  const ShaderStats({super.key, required this.params});
-
-  final VisualizerParams params;
-
-  @override
-  Widget build(BuildContext context) {
-    return GlassPanel(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _StatItem(label: 'Density', value: params.density.toStringAsFixed(2)),
-          _StatItem(label: 'Chaos', value: params.chaos.toStringAsFixed(2)),
-          _StatItem(label: 'Speed', value: params.speed.toStringAsFixed(2)),
+          _PlayerStat(
+            label: 'HOLOGRAPHIC',
+            value: holoScore,
+            active: currentPlayer == PlayerSide.holographic,
+            color: const Color(0xFFB06DFF),
+          ),
+          _TurnIndicator(player: currentPlayer),
+          _PlayerStat(
+            label: 'QUANTUM',
+            value: quantumScore,
+            active: currentPlayer == PlayerSide.quantum,
+            color: const Color(0xFF39B6FF),
+          ),
         ],
       ),
     );
   }
 }
 
-class _StatItem extends StatelessWidget {
-  const _StatItem({required this.label, required this.value});
-
+class _PlayerStat extends StatelessWidget {
   final String label;
-  final String value;
+  final int value;
+  final bool active;
+  final Color color;
+
+  const _PlayerStat({
+    required this.label,
+    required this.value,
+    required this.active,
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -662,122 +472,119 @@ class _StatItem extends StatelessWidget {
       children: [
         Text(
           label,
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: Colors.white70,
-                letterSpacing: 1.1,
-              ),
+          style: TextStyle(
+            color: active ? color : Colors.white38,
+            fontSize: 12,
+            letterSpacing: 2,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        const SizedBox(height: 4),
         Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
+          value.toString().padLeft(2, '0'),
+          style: TextStyle(
+            color: active ? Colors.white : Colors.white54,
+            fontSize: 24,
+            fontFamily: 'monospace',
+          ),
         ),
       ],
     );
   }
 }
 
-class PlaceholderShader extends StatelessWidget {
-  const PlaceholderShader({
-    super.key,
-    required this.palette,
-    required this.pulse,
-    required this.params,
-  });
+class _TurnIndicator extends StatelessWidget {
+  final PlayerSide player;
 
-  final List<Color> palette;
-  final double pulse;
-  final VisualizerParams params;
-
-  @override
-  Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: PlaceholderShaderPainter(
-        colors: palette,
-        pulse: pulse,
-        params: params,
-      ),
-      child: const SizedBox.expand(),
-    );
-  }
-}
-
-class FooterPanel extends StatelessWidget {
-  const FooterPanel({
-    super.key,
-    required this.activePlayer,
-    required this.holoCaptured,
-    required this.quantumCaptured,
-  });
-
-  final PlayerSide activePlayer;
-  final int holoCaptured;
-  final int quantumCaptured;
-
-  @override
-  Widget build(BuildContext context) {
-    final hint = activePlayer == PlayerSide.holographic
-        ? 'Holographic surge: push or flank'
-        : 'Quantum alignment: destabilize the flank';
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
-      child: GlassPanel(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        child: Row(
-          children: [
-            const Icon(Icons.blur_on, color: Colors.white70),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                hint,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      letterSpacing: 1.1,
-                    ),
-              ),
-            ),
-            Text(
-              'Captured -> H:$holoCaptured  Q:$quantumCaptured',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white70,
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class GlassPanel extends StatelessWidget {
-  const GlassPanel({
-    super.key,
-    required this.child,
-    this.padding = const EdgeInsets.all(12),
-  });
-
-  final Widget child;
-  final EdgeInsets padding;
+  const _TurnIndicator({required this.player});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white24),
-        gradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.08),
-            Colors.white.withOpacity(0.02),
-          ],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+        borderRadius: BorderRadius.circular(20),
+        color: Colors.white10,
+      ),
+      child: Text(
+        player == PlayerSide.holographic ? 'HOLO TURN' : 'QUANTUM TURN',
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 10,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.5,
         ),
       ),
-      child: child,
+    );
+  }
+}
+
+class FooterHUD extends StatelessWidget {
+  final PlayerSide activePlayer;
+  final VisualizerParams holoParams;
+  final VisualizerParams quantumParams;
+
+  const FooterHUD({
+    super.key,
+    required this.activePlayer,
+    required this.holoParams,
+    required this.quantumParams,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final params = activePlayer == PlayerSide.holographic ? holoParams : quantumParams;
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.transparent, Colors.black.withOpacity(0.8)],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _ParamDisplay(label: 'CHAOS', value: params.chaos),
+          _ParamDisplay(label: 'DENSITY', value: params.density),
+          _ParamDisplay(label: 'SPEED', value: params.speed),
+        ],
+      ),
+    );
+  }
+}
+
+class _ParamDisplay extends StatelessWidget {
+  final String label;
+  final double value;
+
+  const _ParamDisplay({required this.label, required this.value});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white38,
+            fontSize: 10,
+            letterSpacing: 1.5,
+          ),
+        ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: 60,
+          height: 4,
+          child: LinearProgressIndicator(
+            value: value,
+            backgroundColor: Colors.white10,
+            valueColor: const AlwaysStoppedAnimation(Colors.white),
+          ),
+        ),
+      ],
     );
   }
 }
@@ -806,52 +613,6 @@ class VaporwaveBackdrop extends StatelessWidget {
   }
 }
 
-class ChromaticAberrationOverlay extends StatelessWidget {
-  const ChromaticAberrationOverlay({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return IgnorePointer(
-      child: Opacity(
-        opacity: 0.25,
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: FractionalTranslation(
-                translation: const Offset(-0.004, 0),
-                child: Container(color: Colors.redAccent.withOpacity(0.15)),
-              ),
-            ),
-            Positioned.fill(
-              child: FractionalTranslation(
-                translation: const Offset(0.004, 0),
-                child: Container(color: Colors.blueAccent.withOpacity(0.15)),
-              ),
-            ),
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.transparent,
-                      Colors.white10,
-                      Colors.transparent,
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ... BoardGlowPainter, VaporwaveGridPainter ... (Standard painters)
-
 class BoardGlowPainter extends CustomPainter {
   BoardGlowPainter(this.pulse);
 
@@ -859,31 +620,22 @@ class BoardGlowPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // Subtle grid glow behind the board
     final glowPaint = Paint()
       ..shader = RadialGradient(
         colors: [
-          const Color(0xFF6B4AFF).withOpacity(0.25 + pulse * 0.2),
+          const Color(0xFF6B4AFF).withOpacity(0.1 + pulse * 0.1),
           const Color(0x00000000),
         ],
-        radius: 0.8,
+        radius: 0.6,
         center: Alignment.center,
       ).createShader(Offset.zero & size);
 
     canvas.drawRect(Offset.zero & size, glowPaint);
-
-    final linePaint = Paint()
-      ..color = Colors.white.withOpacity(0.06)
-      ..strokeWidth = 1;
-
-    for (var i = 0; i < 12; i++) {
-      final dy = size.height * (0.15 + i * 0.06);
-      canvas.drawLine(Offset(0, dy), Offset(size.width, dy), linePaint);
-    }
   }
 
   @override
-  bool shouldRepaint(BoardGlowPainter oldDelegate) =>
-      oldDelegate.pulse != pulse;
+  bool shouldRepaint(BoardGlowPainter oldDelegate) => oldDelegate.pulse != pulse;
 }
 
 class VaporwaveGridPainter extends CustomPainter {
@@ -894,129 +646,45 @@ class VaporwaveGridPainter extends CustomPainter {
       ..strokeWidth = 1;
 
     const spacing = 42.0;
+    // Horizon perspective effect
     for (var x = 0.0; x < size.width; x += spacing) {
       canvas.drawLine(Offset(x, 0), Offset(x, size.height), gridPaint);
     }
     for (var y = 0.0; y < size.height; y += spacing) {
       canvas.drawLine(Offset(0, y), Offset(size.width, y), gridPaint);
     }
-
-    final horizonPaint = Paint()
-      ..shader = LinearGradient(
-        colors: [
-          const Color(0xFF00FFD1).withOpacity(0.15),
-          const Color(0x00000000),
-        ],
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-      ).createShader(Offset.zero & size);
-
-    canvas.drawRect(Offset.zero & size, horizonPaint);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-class PlaceholderShaderPainter extends CustomPainter {
-  PlaceholderShaderPainter({
-    required this.colors,
-    required this.pulse,
-    required this.params,
-  });
-
-  final List<Color> colors;
-  final double pulse;
-  final VisualizerParams params;
+class ChromaticAberrationOverlay extends StatelessWidget {
+  const ChromaticAberrationOverlay({super.key});
 
   @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    final gradient = LinearGradient(
-      colors: [
-        colors.first.withOpacity(0.3 + params.chaos * 0.4),
-        colors.last.withOpacity(0.15 + params.morph * 0.4),
-      ],
-      begin: Alignment.topLeft,
-      end: Alignment.bottomRight,
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Opacity(
+        opacity: 0.15,
+        child: Stack(
+          children: [
+            Positioned.fill(
+              child: FractionalTranslation(
+                translation: const Offset(-0.003, 0),
+                child: Container(color: Colors.redAccent.withOpacity(0.1)),
+              ),
+            ),
+            Positioned.fill(
+              child: FractionalTranslation(
+                translation: const Offset(0.003, 0),
+                child: Container(color: Colors.blueAccent.withOpacity(0.1)),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
-
-    final backgroundPaint = Paint()..shader = gradient.createShader(rect);
-    canvas.drawRect(rect, backgroundPaint);
-
-    final swirlPaint = Paint()
-      ..color = Colors.white.withOpacity(0.07 + params.speed * 0.05)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
-
-    final center = size.center(Offset.zero);
-    for (var i = 0; i < 6; i++) {
-      final radius = (size.shortestSide * (0.12 + i * 0.1)) + pulse * 8;
-      canvas.drawCircle(center, radius, swirlPaint);
-    }
-
-    final glitchPaint = Paint()
-      ..color = Colors.white.withOpacity(0.08)
-      ..strokeWidth = 1;
-
-    for (var i = 0; i < 10; i++) {
-      final y = size.height * (0.1 + i * 0.08);
-      final offset = sin((pulse + i) * 3.14) * 12;
-      canvas.drawLine(
-        Offset(10 + offset, y),
-        Offset(size.width - 10 + offset, y),
-        glitchPaint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant PlaceholderShaderPainter oldDelegate) {
-    return oldDelegate.pulse != pulse || oldDelegate.params != params;
-  }
-}
-
-class MarbleShaderPainter extends CustomPainter {
-  MarbleShaderPainter({
-    required this.seed,
-    required this.pulse,
-    required this.isEmpty,
-  });
-
-  final double seed;
-  final double pulse;
-  final bool isEmpty;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    if (isEmpty) return;
-    final center = size.center(Offset.zero);
-    final ripplePaint = Paint()
-      ..color = Colors.white.withOpacity(0.2 + pulse * 0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
-
-    for (var i = 0; i < 3; i++) {
-      final radius = size.shortestSide * (0.2 + i * 0.18) +
-          sin(seed + pulse * 6.28) * 4;
-      canvas.drawCircle(center, radius, ripplePaint);
-    }
-
-    final linePaint = Paint()
-      ..color = Colors.white.withOpacity(0.1)
-      ..strokeWidth = 1;
-
-    for (var i = 0; i < 6; i++) {
-      final angle = seed + i * pi / 3 + pulse;
-      final dx = cos(angle) * size.shortestSide * 0.45;
-      final dy = sin(angle) * size.shortestSide * 0.45;
-      canvas.drawLine(center, center + Offset(dx, dy), linePaint);
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant MarbleShaderPainter oldDelegate) {
-    return oldDelegate.pulse != pulse || oldDelegate.seed != seed;
   }
 }
 
@@ -1025,7 +693,6 @@ class GameState {
   PlayerSide currentPlayer;
   List<HexCoordinate> selection = [];
 
-  // Forward to board properties for convenience
   int get holoCaptured => board.holoCaptured;
   int get quantumCaptured => board.quantumCaptured;
 
@@ -1130,35 +797,21 @@ class GameState {
   }
 
   VisualizerParams visualParamsFor(PlayerSide side) {
-    // Logic updated to use captured counts (balls lost)
-    // Total marbles per player starts at 14.
-    // Captured = lost.
-
     final isHolo = side == PlayerSide.holographic;
-    final myCaptured = isHolo ? holoCaptured : quantumCaptured; // wait, holoCaptured tracks Holo marbles captured?
-    // In game logic: "if state == holo -> holoCaptured++". Yes.
-
-    // Remaining count
+    final myCaptured = isHolo ? holoCaptured : quantumCaptured;
     final myCount = 14 - myCaptured;
-
     final theirCaptured = isHolo ? quantumCaptured : holoCaptured;
     final theirCount = 14 - theirCaptured;
 
     final total = max(myCount + theirCount, 1);
-
-    final deficit = (theirCount - myCount).clamp(0, 14); // If I have fewer marbles
+    final deficit = (theirCount - myCount).clamp(0, 14);
     final advantage = (myCount - theirCount).clamp(0, 14);
     final balance = (myCount / total).clamp(0.0, 1.0);
 
-    // Losing player (deficit > 0) -> redder, more chaotic, lower density, higher speed.
     final chaos = (deficit / 14.0) * 0.9 + 0.1;
     final speed = 0.6 + (deficit / 14.0) * 0.9;
     final density = 0.4 + (advantage / 14.0) * 0.6;
-
-    // Hue shift based on deficit/advantage
-    final hue = isHolo
-        ? 290.0 - deficit * 8 // Holo shifts redder if losing? 290 is purple. Red is 0/360.
-        : 200.0 + deficit * 6; // Quantum (blue 200). Shifts?
+    final hue = isHolo ? 290.0 - deficit * 8 : 200.0 + deficit * 6;
 
     return VisualizerParams(
       chaos: chaos,
@@ -1197,17 +850,6 @@ class BoardSlot {
   final MarbleState owner;
   final double seed;
   final HexCoordinate coordinate;
-
-  BoardSlot copyWith({MarbleState? owner}) {
-    return BoardSlot(
-      row: row,
-      column: column,
-      position: position,
-      owner: owner ?? this.owner,
-      seed: seed,
-      coordinate: coordinate,
-    );
-  }
 }
 
 class VisualizerParams {
@@ -1234,29 +876,13 @@ class VisualizerParams {
   final Vib3Rotation rotation;
 
   @override
-  bool operator ==(Object other) {
-    return other is VisualizerParams &&
-        other.chaos == chaos &&
-        other.speed == speed &&
-        other.density == density &&
-        other.morph == morph &&
-        other.hue == hue &&
-        other.intensity == intensity &&
-        other.saturation == saturation &&
-        other.geometry == geometry &&
-        other.rotation == rotation;
-  }
+  bool operator ==(Object other) =>
+      other is VisualizerParams &&
+      other.chaos == chaos &&
+      other.speed == speed &&
+      other.density == density &&
+      other.hue == hue;
 
   @override
-  int get hashCode => Object.hash(
-        chaos,
-        speed,
-        density,
-        morph,
-        hue,
-        intensity,
-        saturation,
-        geometry,
-        rotation,
-      );
+  int get hashCode => Object.hash(chaos, speed, density, hue);
 }
