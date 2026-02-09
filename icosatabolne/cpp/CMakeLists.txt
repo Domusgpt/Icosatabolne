@@ -82,6 +82,21 @@ target_include_directories(vib3_math PUBLIC
 #     ${CMAKE_CURRENT_SOURCE_DIR}
 # )
 
+# --- Shared Library for Android/FFI ---
+# This builds libvib3_core.so that exposes the C FFI interface
+add_library(vib3_core SHARED
+    src/vib3_ffi.cpp
+)
+
+target_link_libraries(vib3_core PRIVATE
+    vib3_math
+    # vib3_geometry (excluded as source is missing)
+)
+
+target_include_directories(vib3_core PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 # WebAssembly build
 if(EMSCRIPTEN AND VIB3_BUILD_WASM)
     # Combined WASM module
