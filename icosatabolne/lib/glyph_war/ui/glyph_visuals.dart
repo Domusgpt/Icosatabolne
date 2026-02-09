@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vib3_flutter/vib3_flutter.dart';
+import '../../visuals/fallback_painter.dart';
 import '../game_logic.dart';
 
 // Parameter Mapping Logic (Same as before)
@@ -112,7 +113,7 @@ class GlyphVisualController extends ChangeNotifier {
         boardEngine.startRendering(),
         glyphEngine.startRendering(),
         bezelEngine.startRendering(),
-      ]);
+      ]).timeout(const Duration(seconds: 5));
 
       _initialized = true;
     } catch (e) {
@@ -178,7 +179,17 @@ class SharedVisualizerWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (!engine.isInitialized || engine.textureId == null) {
-      return const SizedBox.shrink();
+      // Return fallback painter instead of shrink to prevent black screen
+      return SizedBox.expand(
+        child: CustomPaint(
+          painter: FallbackPainter(
+            config: Vib3Config(system: 'quantum'), // Generic fallback config
+            chaos: 0.5, // Visual noise to indicate issue
+            speed: 0.5,
+            hue: 0.0, // Red tint for error/fallback
+          ),
+        ),
+      );
     }
     return SizedBox.expand(
       child: FittedBox(
