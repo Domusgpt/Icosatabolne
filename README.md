@@ -11,9 +11,16 @@ A Flutter-based digital version of Abalone with holographic/quantum visualizer e
 - **Polished UI**: Glassmorphism, vaporwave aesthetics, and responsive layout.
 - **Cross-Platform**: Builds for Android and Web.
 
-## Build Status
-- **Android APK**: The build is fully functional using the latest `vib3_flutter` SDK.
-- **Web**: Deploys to GitHub Pages.
+## Build Outputs
+
+### Android APK (GitHub Actions)
+The `Android APK` workflow builds a signed release APK and uploads it as a workflow artifact:
+`build/app/outputs/flutter-apk/app-release.apk`.
+
+### Web (GitHub Pages)
+The `Deploy Web to Pages` workflow builds the Flutter web bundle and publishes it to GitHub Pages.
+Once enabled in repo settings, the site will be available at:
+`https://<org-or-user>.github.io/<repo>/`.
 
 ## Development
 Run tests:
