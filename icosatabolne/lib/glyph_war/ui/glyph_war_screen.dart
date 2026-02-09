@@ -477,12 +477,7 @@ class _GameOverOverlay extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {
-                // Reset game?
-                // controller.reset(); // Need to implement reset
-                // For now, recreate logic is in constructor so we'd need to re-nav or add reset.
-                // Assuming hot reload style or just stuck.
-              },
+              onPressed: controller.resetGame,
               child: const Text("REMATCH"),
             ),
           ],

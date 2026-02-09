@@ -30,8 +30,8 @@ class GlyphWarController extends ChangeNotifier {
   GlyphWarPhase phase = GlyphWarPhase.scramble;
   final List<Glyph> _allGlyphs = [];
 
-  late final PlayerState player1;
-  late final PlayerState player2;
+  late PlayerState player1;
+  late PlayerState player2;
 
   Timer? _gameTimer;
   Timer? _attackTimer;
@@ -64,6 +64,19 @@ class GlyphWarController extends ChangeNotifier {
     phase = GlyphWarPhase.scramble;
     tension = 0.0;
     notifyListeners();
+  }
+
+  void resetGame() {
+    _attackTimer?.cancel();
+    _gameTimer?.cancel();
+
+    // Reset players
+    player1 = PlayerState('P1');
+    player2 = PlayerState('P2');
+    winnerId = null;
+    attackTimeRemaining = 0;
+
+    _initializeGame();
   }
 
   List<Glyph> get pile => _allGlyphs.where((g) => g.heldByPlayerId == null).toList();
