@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
 import 'package:icosatabolne/visuals/game_config.dart';
 import 'package:icosatabolne/visuals/fallback_painter.dart';
+import 'package:icosatabolne/visuals/shader_painter.dart';
 import 'package:vib3_flutter/vib3_flutter.dart';
 
 class Vib3Adapter extends StatefulWidget {
@@ -33,7 +35,8 @@ class Vib3Adapter extends StatefulWidget {
 
 class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStateMixin {
   Vib3Engine? _engine;
-  bool _useFallback = false;
+  bool _useNative = false;
+  ui.FragmentProgram? _program;
   late AnimationController _controller;
 
   @override
@@ -41,12 +44,29 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 10), // Slower cycle for shader time
     );
     if (widget.animate) {
       _controller.repeat();
     }
-    _initEngine();
+
+    // Attempt to load shader first as it provides the most reliable "Bombastic" visuals
+    // given the current state of the C++ engine integration.
+    _loadShader();
+
+    // Also try to init native engine, but we might prioritize shader
+    // _initEngine();
+  }
+
+  Future<void> _loadShader() async {
+    try {
+      _program = await ui.FragmentProgram.fromAsset('shaders/vib3_visuals.frag');
+      if (mounted) setState(() {});
+    } catch (e) {
+      debugPrint("Shader Load Failed: $e");
+      // Fallback to native or basic painter
+      _initEngine();
+    }
   }
 
   Future<void> _initEngine() async {
@@ -66,35 +86,24 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
         hue: widget.hue,
       );
       await _engine!.startRendering();
-      if (mounted) setState(() {});
+      if (mounted) setState(() => _useNative = true);
     } catch (e) {
       debugPrint("Vib3 Engine Init Failed: $e");
-      if (mounted) setState(() => _useFallback = true);
+      // Stay on fallback
     }
   }
 
   @override
   void didUpdateWidget(Vib3Adapter oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (_engine != null && _engine!.isInitialized) {
-      if (widget.config.system != oldWidget.config.system) {
+    if (_useNative && _engine != null) {
+       // Update native params...
+       // (Keeping this logic in case we switch back to native)
+       if (widget.config.system != oldWidget.config.system) {
         _engine!.setSystem(widget.config.system);
       }
-      if (widget.config.geometry != oldWidget.config.geometry) {
-        _engine!.setGeometry(widget.config.geometry);
-      }
-      if (widget.chaos != oldWidget.chaos ||
-          widget.speed != oldWidget.speed ||
-          widget.hue != oldWidget.hue ||
-          widget.saturation != oldWidget.saturation ||
-          widget.intensity != oldWidget.intensity) {
-        _engine!.setVisualParams(
-          chaos: widget.chaos,
-          speed: widget.speed,
-          hue: widget.hue,
-          saturation: widget.saturation,
-          intensity: widget.intensity,
-        );
+      if (widget.chaos != oldWidget.chaos) {
+         _engine!.setVisualParams(chaos: widget.chaos, speed: widget.speed, hue: widget.hue);
       }
     }
   }
@@ -109,36 +118,55 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    if (_useFallback) {
+    // 1. Prefer Shader (High Quality)
+    if (_program != null) {
       return AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
+          // Map system/geometry to float for shader
+          // Holo = 0, Quantum = 1
+          double geo = widget.config.system == 'holographic' ? 0.0 : 1.0;
+
           return CustomPaint(
             size: Size(widget.width, widget.height),
-            painter: FallbackPainter(
-              config: widget.config,
-              animationValue: _controller.value * 2 * 3.14159,
+            painter: ShaderPainter(
+              shader: _program!.fragmentShader(),
+              time: _controller.value * 20.0, // Pass time
               chaos: widget.chaos,
-              speed: widget.speed,
+              geometry: geo,
               hue: widget.hue,
+              saturation: widget.saturation,
+              intensity: widget.intensity,
             ),
           );
         },
       );
     }
 
-    if (_engine == null || !_engine!.isInitialized || _engine!.textureId == null) {
-      return Container(
+    // 2. Native Engine (If shader failed)
+    if (_useNative && _engine != null && _engine!.isInitialized) {
+      return SizedBox(
         width: widget.width,
         height: widget.height,
-        color: Colors.transparent,
+        child: Vib3View(engine: _engine!),
       );
     }
 
-    return SizedBox(
-      width: widget.width,
-      height: widget.height,
-      child: Vib3View(engine: _engine!),
+    // 3. Ultimate Fallback (Basic Painter)
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return CustomPaint(
+          size: Size(widget.width, widget.height),
+          painter: FallbackPainter(
+            config: widget.config,
+            animationValue: _controller.value * 2 * 3.14159,
+            chaos: widget.chaos,
+            speed: widget.speed,
+            hue: widget.hue,
+          ),
+        );
+      },
     );
   }
 }
