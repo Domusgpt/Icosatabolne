@@ -5,13 +5,22 @@ import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/game/hex_grid.dart';
 import 'package:icosatabolne/game/game_controller.dart';
 import 'package:icosatabolne/ui/marble_widget.dart';
+import 'package:icosatabolne/visuals/vib3_shim.dart';
 import 'package:provider/provider.dart';
 
 class BoardWidget extends StatefulWidget {
   final double size;
   final bool animateMarbles;
+  final Vib3Engine? quantumEngine;
+  final Vib3Engine? holographicEngine;
 
-  const BoardWidget({super.key, required this.size, this.animateMarbles = true});
+  const BoardWidget({
+    super.key,
+    required this.size,
+    this.animateMarbles = true,
+    this.quantumEngine,
+    this.holographicEngine,
+  });
 
   @override
   State<BoardWidget> createState() => _BoardWidgetState();
@@ -57,6 +66,11 @@ class _BoardWidgetState extends State<BoardWidget> {
               int lost = controller.capturedMarbles[player] ?? 0;
               double chaos = lost / 6.0;
 
+              // Select shared engine based on player type
+              final engine = player == Player.quantum
+                  ? widget.quantumEngine
+                  : widget.holographicEngine;
+
               return Positioned(
                 left: pos.dx - _hexSize * 0.8,
                 top: pos.dy - _hexSize * 0.8,
@@ -66,11 +80,11 @@ class _BoardWidgetState extends State<BoardWidget> {
                   isSelected: _selection.contains(hex),
                   chaosLevel: chaos,
                   animate: widget.animateMarbles,
+                  engine: engine, // Pass shared engine
                 ),
               );
             }).toList(),
 
-            // Draw drag preview arrow?
             if (_isDragging && _selection.isNotEmpty && _dragDelta.distance > 10)
               Positioned(
                  left: _hexToPixel(_selection.first).dx,
@@ -124,19 +138,11 @@ class _BoardWidgetState extends State<BoardWidget> {
         if (_selection.contains(hex)) {
           _selection.remove(hex);
         } else {
-          // Abalone selection rules: must be adjacent line
           if (_selection.isEmpty) {
             _selection.add(hex);
           } else {
-             // Simple check: Allow adding if adjacent to last added?
-             // Or just add and let user manage?
-             // Let's implement smart line selection:
-             // If 1 selected, neighbor -> add.
-             // If 2 selected, neighbor in line -> add.
              if (_selection.length < 3) {
                 _selection.add(hex);
-                // Basic sort to keep them in order?
-                // Not strictly needed for logic but good for move calc.
              } else {
                 _selection = [hex];
              }
@@ -145,7 +151,6 @@ class _BoardWidgetState extends State<BoardWidget> {
       });
       HapticFeedback.selectionClick();
     } else {
-      // Tap empty/opponent: Clear selection
       if (_selection.isNotEmpty) {
         setState(() => _selection.clear());
       }
@@ -172,47 +177,17 @@ class _BoardWidgetState extends State<BoardWidget> {
   void _handlePanEnd(DragEndDetails details, GameController controller) {
     if (_isDragging) {
       _isDragging = false;
-      if (_dragDelta.distance > 30) { // Threshold
-        // Determine direction
-        // 6 directions.
-        double angle = _dragDelta.direction; // -pi to pi
-        // Map to HexDirection
-        // East (0) -> (1,0)
-        // SE (pi/3) -> (0,1)
-        // SW (2pi/3) -> (-1,1)
-        // West (pi) -> (-1,0)
-        // NW (-2pi/3) -> (0,-1)
-        // NE (-pi/3) -> (1,-1)
-
-        // Normalize angle to 0-2pi?
-        // Let's use HexDirection list and dot product or angle diff.
-
-        // Convert angle to index (0-5)
-        // East is 0. 60 deg steps.
+      if (_dragDelta.distance > 30) {
+        double angle = _dragDelta.direction;
         int index = ((angle / (pi / 3)).round()) % 6;
         if (index < 0) index += 6;
-
-        // My HexDirection enum:
-        // east, southEast, southWest, west, northWest, northEast
-        // 0, 1, 2, 3, 4, 5
-        // Corresponds perfectly to index 0, 1, 2, 3...
-        // Wait.
-        // East: 0 rad. Index 0. Correct.
-        // SouthEast: pi/3 (60 deg). Index 1. Correct. (y is down in Flutter)
-        // SouthWest: 2pi/3 (120). Index 2. Correct.
-        // West: pi (180). Index 3. Correct.
-        // NorthWest: -2pi/3 (-120). Index -2 -> 4. Correct.
-        // NorthEast: -pi/3 (-60). Index -1 -> 5. Correct.
-
         HexDirection dir = HexDirection.values[index];
-
-        // Make move
         bool success = controller.makeMove(_selection, dir);
         if (success) {
            HapticFeedback.heavyImpact();
            setState(() => _selection.clear());
         } else {
-           HapticFeedback.vibrate(); // Error
+           HapticFeedback.vibrate();
         }
       }
     }
@@ -234,7 +209,7 @@ class BoardPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     final borderPaint = Paint()
-       ..color = Colors.cyanAccent.withOpacity(0.1) // Holographic vibe
+       ..color = Colors.cyanAccent.withOpacity(0.1)
        ..style = PaintingStyle.stroke
        ..strokeWidth = 1;
 
