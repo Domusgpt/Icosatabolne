@@ -1,9 +1,11 @@
 import 'dart:math';
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/game/hex_grid.dart';
 import 'package:icosatabolne/game/game_controller.dart';
+import 'package:icosatabolne/game/game_events.dart';
 import 'package:icosatabolne/logic/sound_haptics_manager.dart';
 import 'package:icosatabolne/ui/marble_widget.dart';
 import 'package:provider/provider.dart';
@@ -18,15 +20,88 @@ class BoardWidget extends StatefulWidget {
   State<BoardWidget> createState() => _BoardWidgetState();
 }
 
-class _BoardWidgetState extends State<BoardWidget> {
+class _BoardWidgetState extends State<BoardWidget> with SingleTickerProviderStateMixin {
   final SoundHapticsManager _haptics = SoundHapticsManager();
   List<Hex> _selection = [];
   late double _hexSize;
   late Offset _center;
 
+  // Transient Visual Effects per Marble
+  final Map<Hex, double> _marbleImpacts = {};
+  Timer? _impactTimer;
+  StreamSubscription? _gameEventSub;
+
   Offset? _dragStartPos;
   Offset _dragDelta = Offset.zero;
   bool _isDragging = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Listen to game events to trigger marble effects
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final game = context.read<GameController>();
+      _gameEventSub = game.events.listen(_handleGameEvent);
+    });
+  }
+
+  @override
+  void dispose() {
+    _gameEventSub?.cancel();
+    _impactTimer?.cancel();
+    super.dispose();
+  }
+
+  void _handleGameEvent(GameEvent event) {
+    if (event is MoveEvent) {
+      _triggerImpact(event.movingMarbles, 0.5);
+    } else if (event is PushEvent) {
+      _triggerImpact(event.movingMarbles, 0.7);
+      _triggerImpact(event.pushedMarbles, 1.0); // Hard impact
+    } else if (event is CaptureEvent) {
+      // Capture handled by game controller removing it, but maybe we show a ghost?
+    }
+  }
+
+  void _triggerImpact(List<Hex> hexes, double intensity) {
+    setState(() {
+      for (var hex in hexes) {
+        _marbleImpacts[hex] = intensity;
+      }
+    });
+
+    // Simple decay loop
+    _impactTimer?.cancel();
+    _impactTimer = Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      bool changed = false;
+      List<Hex> toRemove = [];
+
+      _marbleImpacts.forEach((hex, val) {
+        double newVal = val - 0.1;
+        if (newVal <= 0) {
+          toRemove.add(hex);
+        } else {
+          _marbleImpacts[hex] = newVal;
+        }
+        changed = true;
+      });
+
+      if (changed) {
+        setState(() {
+          for (var h in toRemove) _marbleImpacts.remove(h);
+        });
+      }
+
+      if (_marbleImpacts.isEmpty) {
+        timer.cancel();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +133,7 @@ class _BoardWidgetState extends State<BoardWidget> {
 
               int lost = controller.capturedMarbles[player] ?? 0;
               double chaos = lost / 6.0;
+              double impact = _marbleImpacts[hex] ?? 0.0;
 
               return Positioned(
                 left: pos.dx - _hexSize * 0.8,
@@ -68,6 +144,7 @@ class _BoardWidgetState extends State<BoardWidget> {
                   isSelected: _selection.contains(hex),
                   chaosLevel: chaos,
                   animate: widget.animateMarbles,
+                  impact: impact,
                 ),
               );
             }).toList(),

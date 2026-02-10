@@ -6,6 +6,7 @@ import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/ui/board_widget.dart';
 import 'package:icosatabolne/ui/visualizer_debug_panel.dart';
 import 'package:icosatabolne/visuals/visualizer_controller.dart';
+import 'package:icosatabolne/visuals/visualizer_choreographer.dart';
 import 'package:icosatabolne/visuals/vib3_adapter.dart';
 import 'package:icosatabolne/visuals/game_config.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +23,6 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
   late VisualizerController _vizController;
   late Ticker _ticker;
-  GameController? _gameController;
 
   @override
   void initState() {
@@ -64,51 +64,30 @@ class _GameScreenContent extends StatefulWidget {
   State<_GameScreenContent> createState() => _GameScreenContentState();
 }
 
-class _GameScreenContentState extends State<_GameScreenContent> {
+class _GameScreenContentState extends State<_GameScreenContent> with TickerProviderStateMixin {
+  VisualizerChoreographer? _choreographer;
+
   @override
   void initState() {
     super.initState();
-    // Hook up game events to visualizer
+    // Hook up game events to visualizer via Choreographer
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final game = context.read<GameController>();
       final viz = context.read<VisualizerController>();
 
-      game.addListener(() {
-        // Calculate tension based on captured marbles
-        int holoLost = game.capturedMarbles[Player.holographic] ?? 0;
-        int quantLost = game.capturedMarbles[Player.quantum] ?? 0;
-        int totalLost = holoLost + quantLost;
-
-        // Map tension to visual parameters
-        // Max marbles to lose is 6 per side. Max total tension 11 (game over at 6).
-        double tension = (totalLost / 10.0).clamp(0.0, 1.0);
-
-        // Update Visualizer Controller
-        // Note: This overrides manual slider adjustments, which is intended for gameplay reaction.
-        // Use the debug panel to observe or momentarily tweak.
-        viz.chaos = tension;
-        viz.speed = 1.0 + (tension * 3.0); // Speed up significantly
-        viz.distortion = tension * 0.8; // More glitchy
-
-        // Color shift based on who is losing
-        // Losing player becomes "redder"
-        if (holoLost > quantLost) {
-          // Holo (Cyan 180) is losing. Shift towards Red (0/360).
-          // 180 -> 0
-          viz.hue = 180.0 * (1.0 - (holoLost / 6.0));
-        } else if (quantLost > holoLost) {
-          // Quantum (Purple 280) is losing. Shift towards Red (360/0).
-          // 280 -> 360
-          viz.hue = 280.0 + (80.0 * (quantLost / 6.0));
-        } else {
-          // Balanced
-          viz.hue = 230.0; // Deep Blue/Purple mix
-        }
-
-        // Trigger update
-        viz.notifyListeners();
-      });
+      // Initialize Choreographer which handles all reactive logic
+      _choreographer = VisualizerChoreographer(
+        visualizer: viz,
+        game: game,
+        vsync: this,
+      );
     });
+  }
+
+  @override
+  void dispose() {
+    _choreographer?.dispose();
+    super.dispose();
   }
 
   @override

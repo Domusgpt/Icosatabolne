@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:icosatabolne/logic/sound_haptics_manager.dart';
+import 'package:icosatabolne/game/game_events.dart';
 import 'board_state.dart';
 import 'hex_grid.dart';
 import 'rules.dart';
@@ -11,6 +13,9 @@ class GameController extends ChangeNotifier {
   int _turnCount;
   final Map<Player, int> _capturedMarbles;
   String? _lastError;
+
+  final _eventController = StreamController<GameEvent>.broadcast();
+  Stream<GameEvent> get events => _eventController.stream;
 
   GameController()
       : _board = BoardState.initial(),
@@ -37,6 +42,12 @@ class GameController extends ChangeNotifier {
     return null;
   }
 
+  @override
+  void dispose() {
+    _eventController.close();
+    super.dispose();
+  }
+
   void reset() {
     _board = BoardState.initial();
     _currentTurn = Player.holographic;
@@ -44,6 +55,7 @@ class GameController extends ChangeNotifier {
     _capturedMarbles[Player.holographic] = 0;
     _capturedMarbles[Player.quantum] = 0;
     _lastError = null;
+    _eventController.add(const GameResetEvent());
     notifyListeners();
   }
 
@@ -98,13 +110,29 @@ class GameController extends ChangeNotifier {
       }
     }
 
-    // Play appropriate haptic effect
+    // Play appropriate haptic effect & Emit Event
     if (result.eliminatedMarble != null) {
       _haptics.playCaptureEffect();
+      _eventController.add(CaptureEvent(
+        player: mover,
+        capturedMarble: result.eliminatedMarble!,
+        totalCapturedByPlayer: _capturedMarbles[mover] ?? 0
+      ));
     } else if (result.pushedMarbles.isNotEmpty) {
       _haptics.playPushEffect();
+      _eventController.add(PushEvent(
+        player: mover,
+        movingMarbles: result.movingMarbles,
+        pushedMarbles: result.pushedMarbles,
+        direction: direction,
+      ));
     } else {
       _haptics.playMoveEffect();
+      _eventController.add(MoveEvent(
+        player: mover,
+        movingMarbles: result.movingMarbles,
+        direction: direction,
+      ));
     }
 
     _board = BoardState(pieces: newPieces, radius: _board.radius);
@@ -113,7 +141,11 @@ class GameController extends ChangeNotifier {
     _lastError = null;
 
     if (isGameOver) {
-      _haptics.playWinEffect();
+      Player? w = winner;
+      if (w != null) {
+        _haptics.playWinEffect();
+        _eventController.add(GameOverEvent(winner: w, finalScore: _capturedMarbles[w]!));
+      }
     }
 
     notifyListeners();

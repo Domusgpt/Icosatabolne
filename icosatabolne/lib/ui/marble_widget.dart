@@ -11,6 +11,7 @@ class MarbleWidget extends StatelessWidget {
   final double hueShift;
   final double speed;
   final bool animate;
+  final double impact; // Transient visual effect strength (0.0 - 1.0)
 
   const MarbleWidget({
     super.key,
@@ -21,12 +22,22 @@ class MarbleWidget extends StatelessWidget {
     this.hueShift = 0.0,
     this.speed = 1.0,
     this.animate = true,
+    this.impact = 0.0,
   });
 
   @override
   Widget build(BuildContext context) {
     final system = player == Player.holographic ? 'holographic' : 'quantum';
     final geometry = player == Player.holographic ? 0 : 8;
+
+    // Dynamic params derived from impact
+    final double activeSpeed = speed * (1.0 + impact * 2.0); // Triple speed on impact
+    final double activeIntensity = 0.9 + (impact * 1.5); // Burst brightness
+    final double activeDistortion = chaosLevel + (impact * 0.5);
+
+    // Geometry Morph on Impact
+    // If impact > 0.5, morph geometry slightly to show "stress"
+    final double morph = impact > 0.5 ? 0.5 : 0.0;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
@@ -35,9 +46,16 @@ class MarbleWidget extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         border: isSelected ? Border.all(color: Colors.white, width: 2) : null,
-        boxShadow: isSelected ? [
-          BoxShadow(color: Colors.white.withOpacity(0.5), blurRadius: 10, spreadRadius: 2)
-        ] : [],
+        boxShadow: [
+          if (isSelected)
+            BoxShadow(color: Colors.white.withOpacity(0.5), blurRadius: 10, spreadRadius: 2),
+          if (impact > 0.1)
+            BoxShadow(
+              color: (player == Player.holographic ? Colors.cyanAccent : Colors.purpleAccent).withOpacity(impact * 0.8),
+              blurRadius: 15 * impact,
+              spreadRadius: 5 * impact,
+            ),
+        ],
       ),
       child: ClipOval(
         child: Vib3Adapter(
@@ -49,8 +67,12 @@ class MarbleWidget extends StatelessWidget {
           width: size,
           height: size,
           chaos: chaosLevel,
-          speed: speed,
-          hue: 200 + hueShift,
+          speed: activeSpeed,
+          hue: 200 + hueShift + (impact * 60.0), // Shift hue on impact
+          intensity: activeIntensity,
+          geometryMorph: morph,
+          distortion: activeDistortion,
+          rotXY: impact * 3.14, // Spin on impact
           animate: animate,
         ),
       ),
