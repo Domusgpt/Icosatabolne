@@ -178,29 +178,39 @@ class SharedVisualizerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!engine.isInitialized || engine.textureId == null) {
-      // Return fallback painter instead of shrink to prevent black screen
-      return SizedBox.expand(
-        child: CustomPaint(
-          painter: FallbackPainter(
-            config: Vib3Config(system: 'quantum'), // Generic fallback config
-            chaos: 0.5, // Visual noise to indicate issue
-            speed: 0.5,
-            hue: 0.0, // Red tint for error/fallback
-          ),
-        ),
-      );
-    }
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: fit,
-        alignment: alignment,
-        child: SizedBox(
-          width: 100, // Texture size doesn't matter for FittedBox, aspect ratio matters?
-          height: 100, // Assuming square texture from engine
-          child: Texture(textureId: engine.textureId!),
+    // Always render fallback painter at the bottom
+    // If native engine initializes, it renders ON TOP (assuming texture has transparency or covers it)
+    // If native engine fails (black/transparent), fallback remains visible.
+
+    final fallback = SizedBox.expand(
+      child: CustomPaint(
+        painter: FallbackPainter(
+          config: Vib3Config(system: 'quantum'),
+          chaos: 0.5,
+          speed: 0.5,
+          hue: 0.0,
         ),
       ),
+    );
+
+    if (!engine.isInitialized || engine.textureId == null) {
+      return fallback;
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        fallback,
+        FittedBox(
+          fit: fit,
+          alignment: alignment,
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Texture(textureId: engine.textureId!),
+          ),
+        ),
+      ],
     );
   }
 }
