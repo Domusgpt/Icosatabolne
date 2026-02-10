@@ -2,7 +2,7 @@ name: Build and Deploy
 
 on:
   push:
-    branches: [ "feature/icosatabolne-game-v1", "main", "feature/icosatabolne-web-deployment" ]
+    branches: [ "main", "feature/**" ]
   workflow_dispatch:
 
 permissions:
