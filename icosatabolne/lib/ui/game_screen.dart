@@ -1,78 +1,189 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:icosatabolne/game/game_controller.dart';
 import 'package:icosatabolne/game/board_state.dart';
 import 'package:icosatabolne/ui/board_widget.dart';
+import 'package:icosatabolne/ui/visualizer_debug_panel.dart';
+import 'package:icosatabolne/visuals/visualizer_controller.dart';
+import 'package:icosatabolne/visuals/vib3_adapter.dart';
+import 'package:icosatabolne/visuals/game_config.dart';
 import 'package:provider/provider.dart';
 import 'dart:ui';
 import 'dart:math';
 
-class GameScreen extends StatelessWidget {
+class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => GameController(),
-      child: Scaffold(
-        backgroundColor: Colors.black, // Vaporwave dark
-        body: Stack(
-          children: [
-            // Background effects
-            const _BackgroundEffects(),
+  State<GameScreen> createState() => _GameScreenState();
+}
 
-            // Main UI
-            SafeArea(
-              child: Column(
-                children: [
-                  const _Header(),
-                  Expanded(
-                    child: Center(
-                      child: LayoutBuilder(
-                        builder: (context, constraints) {
-                          double size = min(constraints.maxWidth, constraints.maxHeight);
-                          return BoardWidget(size: size * 0.9);
-                        },
-                      ),
+class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
+  late VisualizerController _vizController;
+  late Ticker _ticker;
+  GameController? _gameController;
+
+  @override
+  void initState() {
+    super.initState();
+    _vizController = VisualizerController();
+
+    // Ticker to drive the visualizer physics (decay, smooth transitions)
+    _ticker = createTicker((elapsed) {
+      // Assuming 60fps roughly, or use elapsed.
+      // VisualizerController uses a fixed dt logic mostly for damping
+      _vizController.update(0.016);
+    });
+    _ticker.start();
+  }
+
+  @override
+  void dispose() {
+    _ticker.dispose();
+    _vizController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GameController()),
+        ChangeNotifierProvider.value(value: _vizController),
+      ],
+      child: const _GameScreenContent(),
+    );
+  }
+}
+
+class _GameScreenContent extends StatefulWidget {
+  const _GameScreenContent();
+
+  @override
+  State<_GameScreenContent> createState() => _GameScreenContentState();
+}
+
+class _GameScreenContentState extends State<_GameScreenContent> {
+  @override
+  void initState() {
+    super.initState();
+    // Hook up game events to visualizer
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final game = context.read<GameController>();
+      final viz = context.read<VisualizerController>();
+
+      game.addListener(() {
+        // Calculate tension based on captured marbles
+        int holoLost = game.capturedMarbles[Player.holographic] ?? 0;
+        int quantLost = game.capturedMarbles[Player.quantum] ?? 0;
+        int totalLost = holoLost + quantLost;
+
+        // Map tension to visual parameters
+        // Max marbles to lose is 6 per side. Max total tension 11 (game over at 6).
+        double tension = (totalLost / 10.0).clamp(0.0, 1.0);
+
+        // Update Visualizer Controller
+        // Note: This overrides manual slider adjustments, which is intended for gameplay reaction.
+        // Use the debug panel to observe or momentarily tweak.
+        viz.chaos = tension;
+        viz.speed = 1.0 + (tension * 3.0); // Speed up significantly
+        viz.distortion = tension * 0.8; // More glitchy
+
+        // Color shift based on who is losing
+        // Losing player becomes "redder"
+        if (holoLost > quantLost) {
+          // Holo (Cyan 180) is losing. Shift towards Red (0/360).
+          // 180 -> 0
+          viz.hue = 180.0 * (1.0 - (holoLost / 6.0));
+        } else if (quantLost > holoLost) {
+          // Quantum (Purple 280) is losing. Shift towards Red (360/0).
+          // 280 -> 360
+          viz.hue = 280.0 + (80.0 * (quantLost / 6.0));
+        } else {
+          // Balanced
+          viz.hue = 230.0; // Deep Blue/Purple mix
+        }
+
+        // Trigger update
+        viz.notifyListeners();
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black, // Vaporwave dark
+      body: Stack(
+        children: [
+          // Background effects (Vib3 Visualizer)
+          const Positioned.fill(child: _Vib3Background()),
+
+          // Main UI
+          SafeArea(
+            child: Column(
+              children: [
+                const _Header(),
+                Expanded(
+                  child: Center(
+                    child: LayoutBuilder(
+                      builder: (context, constraints) {
+                        double size = min(constraints.maxWidth, constraints.maxHeight);
+                        return BoardWidget(size: size * 0.9);
+                      },
                     ),
                   ),
-                  const _ScorePanel(),
-                ],
-              ),
+                ),
+                const _ScorePanel(),
+              ],
             ),
+          ),
 
-            // Moiré Overlay
-            const _MoireOverlay(),
+          // Moiré Overlay
+          const _MoireOverlay(),
 
-            // Game Over Overlay
-            const _GameOverOverlay(),
-          ],
-        ),
+          // Game Over Overlay
+          const _GameOverOverlay(),
+
+          // Visualizer Debug Panel (Top Layer)
+          const VisualizerDebugPanel(),
+        ],
       ),
     );
   }
 }
 
-class _BackgroundEffects extends StatelessWidget {
-  const _BackgroundEffects();
+class _Vib3Background extends StatelessWidget {
+  const _Vib3Background();
 
   @override
   Widget build(BuildContext context) {
-    // Vaporwave gradient
-    return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF0D0221), // Deep purple
-            Color(0xFF2E0249),
-            Color(0xFF0F3460), // Cyber blue
-          ],
-        ),
+    final viz = context.watch<VisualizerController>();
+
+    return Vib3Adapter(
+      config: const GameVib3Config(
+        system: 'background',
+        geometry: 0,
+        gridDensity: 16
       ),
-    ).animate(onPlay: (c) => c.repeat(reverse: true))
-    .shimmer(duration: 5.seconds, color: Colors.purpleAccent.withOpacity(0.1));
+      width: MediaQuery.of(context).size.width,
+      height: MediaQuery.of(context).size.height,
+      chaos: viz.chaos,
+      speed: viz.speed,
+      hue: viz.hue,
+      saturation: viz.saturation,
+      intensity: viz.intensity,
+      geometryMorph: viz.geometryMorph,
+      rotXY: viz.rotXY,
+      rotXZ: viz.rotXZ,
+      rotYZ: viz.rotYZ,
+      rotXW: viz.rotXW,
+      rotYW: viz.rotYW,
+      rotZW: viz.rotZW,
+      distortion: viz.distortion,
+      zoom: viz.zoom,
+    );
   }
 }
 

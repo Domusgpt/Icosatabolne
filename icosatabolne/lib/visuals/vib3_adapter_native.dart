@@ -16,6 +16,17 @@ class Vib3Adapter extends StatefulWidget {
   final double saturation;
   final double intensity;
 
+  // Advanced Params (Optional - if null, auto-derived)
+  final double? rotXY;
+  final double? rotXZ;
+  final double? rotYZ;
+  final double? rotXW;
+  final double? rotYW;
+  final double? rotZW;
+  final double? distortion;
+  final double? zoom;
+  final double? geometryMorph;
+
   const Vib3Adapter({
     super.key,
     required this.config,
@@ -27,6 +38,15 @@ class Vib3Adapter extends StatefulWidget {
     this.hue = 200,
     this.saturation = 0.8,
     this.intensity = 0.9,
+    this.rotXY,
+    this.rotXZ,
+    this.rotYZ,
+    this.rotXW,
+    this.rotYW,
+    this.rotZW,
+    this.distortion,
+    this.zoom,
+    this.geometryMorph,
   });
 
   @override
@@ -125,18 +145,28 @@ class _Vib3AdapterState extends State<Vib3Adapter> with SingleTickerProviderStat
         builder: (context, child) {
           // Map system/geometry to float for shader
           // Holo = 0, Quantum = 1
-          double geo = widget.config.system == 'holographic' ? 0.0 : 1.0;
+          double geo = widget.geometryMorph ?? (widget.config.system == 'holographic' ? 0.0 : 1.0);
+          double time = _controller.value * 20.0;
 
           return CustomPaint(
             size: Size(widget.width, widget.height),
             painter: ShaderPainter(
               shader: _program!.fragmentShader(),
-              time: _controller.value * 20.0, // Pass time
+              time: time,
               chaos: widget.chaos,
               geometry: geo,
               hue: widget.hue,
               saturation: widget.saturation,
               intensity: widget.intensity,
+              // Map extra params dynamically based on input props or override
+              rotXY: widget.rotXY ?? (time * widget.speed * 0.5),
+              rotXZ: widget.rotXZ ?? (time * widget.speed * 0.3),
+              rotYZ: widget.rotYZ ?? (time * widget.speed * 0.2),
+              rotXW: widget.rotXW ?? (widget.chaos > 0.1 ? time * widget.chaos : 0.0),
+              rotYW: widget.rotYW ?? (widget.chaos > 0.1 ? time * widget.chaos * 0.7 : 0.0),
+              rotZW: widget.rotZW ?? (widget.chaos > 0.1 ? time * widget.chaos * 1.3 : 0.0),
+              distortion: widget.distortion ?? (widget.chaos * 0.5),
+              zoom: widget.zoom ?? (widget.chaos * 0.2),
             ),
           );
         },

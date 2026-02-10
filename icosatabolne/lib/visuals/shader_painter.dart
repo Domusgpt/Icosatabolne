@@ -10,6 +10,16 @@ class ShaderPainter extends CustomPainter {
   final double saturation;
   final double intensity;
 
+  // New 6D Rotation & Effects
+  final double rotXY;
+  final double rotXZ;
+  final double rotYZ;
+  final double rotXW;
+  final double rotYW;
+  final double rotZW;
+  final double distortion;
+  final double zoom;
+
   ShaderPainter({
     required this.shader,
     required this.time,
@@ -18,6 +28,14 @@ class ShaderPainter extends CustomPainter {
     required this.hue,
     required this.saturation,
     required this.intensity,
+    this.rotXY = 0.0,
+    this.rotXZ = 0.0,
+    this.rotYZ = 0.0,
+    this.rotXW = 0.0,
+    this.rotYW = 0.0,
+    this.rotZW = 0.0,
+    this.distortion = 0.0,
+    this.zoom = 0.0,
   });
 
   @override
@@ -46,6 +64,20 @@ class ShaderPainter extends CustomPainter {
     // 7: uIntensity
     shader.setFloat(7, intensity);
 
+    // 8-13: Rotations
+    shader.setFloat(8, rotXY);
+    shader.setFloat(9, rotXZ);
+    shader.setFloat(10, rotYZ);
+    shader.setFloat(11, rotXW);
+    shader.setFloat(12, rotYW);
+    shader.setFloat(13, rotZW);
+
+    // 14: uDistortion
+    shader.setFloat(14, distortion);
+
+    // 15: uZoom
+    shader.setFloat(15, zoom);
+
     final paint = Paint()..shader = shader;
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
   }
@@ -57,6 +89,14 @@ class ShaderPainter extends CustomPainter {
            oldDelegate.geometry != geometry ||
            oldDelegate.hue != hue ||
            oldDelegate.saturation != saturation ||
-           oldDelegate.intensity != intensity;
+           oldDelegate.intensity != intensity ||
+           oldDelegate.rotXY != rotXY ||
+           oldDelegate.rotXZ != rotXZ ||
+           oldDelegate.rotYZ != rotYZ ||
+           oldDelegate.rotXW != rotXW ||
+           oldDelegate.rotYW != rotYW ||
+           oldDelegate.rotZW != rotZW ||
+           oldDelegate.distortion != distortion ||
+           oldDelegate.zoom != zoom;
   }
 }

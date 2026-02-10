@@ -13,6 +13,17 @@ class Vib3Adapter extends StatefulWidget {
   final double saturation;
   final double intensity;
 
+  // Advanced Params (Optional - if null, auto-derived)
+  final double? rotXY;
+  final double? rotXZ;
+  final double? rotYZ;
+  final double? rotXW;
+  final double? rotYW;
+  final double? rotZW;
+  final double? distortion;
+  final double? zoom;
+  final double? geometryMorph;
+
   const Vib3Adapter({
     super.key,
     required this.config,
@@ -24,6 +35,15 @@ class Vib3Adapter extends StatefulWidget {
     this.hue = 200,
     this.saturation = 0.8,
     this.intensity = 0.9,
+    this.rotXY,
+    this.rotXZ,
+    this.rotYZ,
+    this.rotXW,
+    this.rotYW,
+    this.rotZW,
+    this.distortion,
+    this.zoom,
+    this.geometryMorph,
   });
 
   @override
