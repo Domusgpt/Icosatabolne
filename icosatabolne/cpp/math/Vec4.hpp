@@ -20,6 +20,10 @@
 #include <wasm_simd128.h>
 #endif
 
+#ifdef __EMSCRIPTEN__
+typedef v128_t simd128_t;
+#endif
+
 namespace vib3 {
 
 /**
@@ -36,7 +40,7 @@ public:
         __m128 simd;
 #endif
 #ifdef __EMSCRIPTEN__
-        v128_t simd;
+        simd128_t simd;
 #endif
     };
 
@@ -48,6 +52,9 @@ public:
 
 #ifdef VIB3_HAS_SSE41
     Vec4(__m128 v) noexcept : simd(v) {}
+#endif
+#ifdef __EMSCRIPTEN__
+    Vec4(simd128_t v) noexcept : simd(v) {}
 #endif
 
     // Static factories
