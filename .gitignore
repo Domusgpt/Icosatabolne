@@ -49,3 +49,6 @@ windows/
 linux/
 ios/
 *.txt
+packages/vib3_flutter/android/.cxx/
+packages/vib3_flutter/android/build/
+packages/vib3_flutter/build/
