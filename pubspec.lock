@@ -211,12 +211,10 @@ packages:
   vib3_flutter:
     dependency: "direct main"
     description:
-      path: flutter
-      ref: main
-      resolved-ref: "9e9f8dfe4e8c9c718c702a47cedb01d94d94c497"
-      url: "https://github.com/Domusgpt/vib3codeSDKv3.0.0.git"
-    source: git
-    version: "1.7.0"
+      path: "packages/vib3_flutter"
+      relative: true
+    source: path
+    version: "2.0.1"
   vm_service:
     dependency: transitive
     description:

@@ -102,7 +102,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
     if (!mounted) return;
     if (kIsWeb) return; // Skip heavy WebGPU on web for this demo if not supported
 
-    // 1. Deep Field: Slow, fractal, dark
+    // 1. Deep Field: Slow, fractal, dark (Layer 0)
     await _initializeEngine(
       _deepFieldEngine,
       const Vib3Config(system: 'faceted', geometry: 5 /* Fractal */, gridDensity: 24),
@@ -110,9 +110,10 @@ class _AbaloneHomeState extends State<AbaloneHome>
       baseParams: const VisualizerParams(
         chaos: 0.1, speed: 0.2, density: 0.3, morph: 0.2, hue: 260, intensity: 0.4, saturation: 0.6, geometry: 5, rotation: Vib3Rotation(),
       ),
+      roleIntensity: 0.0, // Background Layer
     );
 
-    // 2. Holo Base: Torus, glowing
+    // 2. Holo Base: Torus, glowing (Layer 2: Content)
     await _initializeEngine(
       _holoBaseEngine,
       const Vib3Config(system: 'holographic', geometry: 3 /* Torus */, gridDensity: 48),
@@ -120,9 +121,10 @@ class _AbaloneHomeState extends State<AbaloneHome>
       baseParams: const VisualizerParams(
         chaos: 0.2, speed: 0.8, density: 0.6, morph: 0.6, hue: 290, intensity: 0.8, saturation: 0.8, geometry: 3, rotation: Vib3Rotation(),
       ),
+      roleIntensity: 1.0, // Content Layer
     );
 
-    // 3. Holo Lattice: Hypercube, sharp, wireframe-like
+    // 3. Holo Lattice: Hypercube, sharp, wireframe-like (Layer 3: Highlight)
     await _initializeEngine(
       _holoLatticeEngine,
       const Vib3Config(system: 'holographic', geometry: 1 /* Hypercube */, gridDensity: 32),
@@ -130,9 +132,10 @@ class _AbaloneHomeState extends State<AbaloneHome>
       baseParams: const VisualizerParams(
         chaos: 0.1, speed: 0.4, density: 0.2, morph: 0.1, hue: 300, intensity: 0.6, saturation: 0.9, geometry: 1, rotation: Vib3Rotation(),
       ),
+      roleIntensity: 0.85, // Highlight Layer
     );
 
-    // 4. Quantum Base: Sphere/Wave, fluid
+    // 4. Quantum Base: Sphere/Wave, fluid (Layer 2: Content)
     await _initializeEngine(
       _quantumBaseEngine,
       const Vib3Config(system: 'quantum', geometry: 6 /* Wave */, gridDensity: 48),
@@ -140,9 +143,10 @@ class _AbaloneHomeState extends State<AbaloneHome>
       baseParams: const VisualizerParams(
         chaos: 0.3, speed: 0.9, density: 0.5, morph: 0.7, hue: 200, intensity: 0.8, saturation: 0.7, geometry: 6, rotation: Vib3Rotation(),
       ),
+      roleIntensity: 1.0, // Content Layer
     );
 
-    // 5. Quantum Lattice: Crystal, structured
+    // 5. Quantum Lattice: Crystal, structured (Layer 4: Accent)
     await _initializeEngine(
       _quantumLatticeEngine,
       const Vib3Config(system: 'quantum', geometry: 7 /* Crystal */, gridDensity: 32),
@@ -150,6 +154,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
       baseParams: const VisualizerParams(
         chaos: 0.2, speed: 0.5, density: 0.3, morph: 0.2, hue: 190, intensity: 0.7, saturation: 0.8, geometry: 7, rotation: Vib3Rotation(),
       ),
+      roleIntensity: 0.6, // Accent Layer
     );
   }
 
@@ -158,6 +163,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
     Vib3Config config,
     ValueChanged<bool> onReady, {
     required VisualizerParams baseParams,
+    double roleIntensity = 0.0,
   }) async {
     try {
       await engine.initialize(config);
@@ -168,6 +174,7 @@ class _AbaloneHomeState extends State<AbaloneHome>
         hue: baseParams.hue,
         intensity: baseParams.intensity,
         saturation: baseParams.saturation,
+        roleIntensity: roleIntensity,
       );
       await engine.startRendering();
       onReady(true);
