@@ -51,20 +51,66 @@ class _GlyphWarScreenState extends State<GlyphWarScreen> {
       value: _gameController,
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            // Layer A: Background (Deep Field)
-            Positioned.fill(
-              child: SharedVisualizerWidget(
-                engine: _visualController.boardEngine,
-                fit: BoxFit.cover,
-              ),
-            ),
+        body: AnimatedBuilder(
+          animation: _visualController,
+          builder: (context, _) {
+            if (_visualController.error != null) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.error_outline, color: Colors.red, size: 48),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Graphics Initialization Failed",
+                        style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        _visualController.error!,
+                        style: TextStyle(color: Colors.redAccent, fontSize: 12),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: _initVisuals,
+                        child: const Text("RETRY"),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
 
-            // Layer B: Gameplay
-            SafeArea(
-              child: Column(
-                children: [
+            if (!_visualController.isInitialized) {
+              return const Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: Colors.cyan),
+                    SizedBox(height: 16),
+                    Text("INITIALIZING VIB3 ENGINE...", style: TextStyle(color: Colors.cyan)),
+                  ],
+                ),
+              );
+            }
+
+            return Stack(
+              children: [
+                // Layer A: Background (Deep Field)
+                Positioned.fill(
+                  child: SharedVisualizerWidget(
+                    engine: _visualController.boardEngine,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+
+                // Layer B: Gameplay
+                SafeArea(
+                  child: Column(
+                    children: [
                   // Player 2 Area (Opponent)
                   Expanded(
                     flex: 2,
@@ -89,31 +135,33 @@ class _GlyphWarScreenState extends State<GlyphWarScreen> {
                     ),
                   ),
 
-                  // Player 1 Area (Me)
-                  Expanded(
-                    flex: 3, // slightly larger for controls
-                    child: _PlayerArea(
-                      playerId: 'P1',
-                      isOpponent: false,
-                      visualController: _visualController,
-                    ),
+                      // Player 1 Area (Me)
+                      Expanded(
+                        flex: 3, // slightly larger for controls
+                        child: _PlayerArea(
+                          playerId: 'P1',
+                          isOpponent: false,
+                          visualController: _visualController,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-            ),
+                ),
 
-            // Layer C: Bezel/HUD Overlay
-            IgnorePointer(
-              child: SharedVisualizerWidget(
-                engine: _visualController.bezelEngine,
-                fit: BoxFit.fill,
-              ),
-            ),
+                // Layer C: Bezel/HUD Overlay
+                IgnorePointer(
+                  child: SharedVisualizerWidget(
+                    engine: _visualController.bezelEngine,
+                    fit: BoxFit.fill,
+                  ),
+                ),
 
-            // Game Over Overlay
-            if (_gameController.phase == GlyphWarPhase.gameOver)
-              const _GameOverOverlay(),
-          ],
+                // Game Over Overlay
+                if (_gameController.phase == GlyphWarPhase.gameOver)
+                  const _GameOverOverlay(),
+              ],
+            );
+          },
         ),
       ),
     );

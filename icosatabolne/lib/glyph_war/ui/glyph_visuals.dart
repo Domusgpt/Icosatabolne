@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vib3_flutter/vib3_flutter.dart';
+import '../../visuals/fallback_painter.dart';
 import '../game_logic.dart';
 
 // Parameter Mapping Logic (Same as before)
@@ -93,22 +94,32 @@ class GlyphVisualController extends ChangeNotifier {
   bool _initialized = false;
   bool get isInitialized => _initialized;
 
+  String? _error;
+  String? get error => _error;
+
   Future<void> initialize() async {
     if (_initialized) return;
+    _error = null;
+    notifyListeners();
 
-    await Future.wait([
-      boardEngine.initialize(kBoardConfig),
-      glyphEngine.initialize(kGlyphConfig),
-      bezelEngine.initialize(kBezelConfig),
-    ]);
+    try {
+      await Future.wait([
+        boardEngine.initialize(kBoardConfig),
+        glyphEngine.initialize(kGlyphConfig),
+        bezelEngine.initialize(kBezelConfig),
+      ]);
 
-    await Future.wait([
-      boardEngine.startRendering(),
-      glyphEngine.startRendering(),
-      bezelEngine.startRendering(),
-    ]);
+      await Future.wait([
+        boardEngine.startRendering(),
+        glyphEngine.startRendering(),
+        bezelEngine.startRendering(),
+      ]).timeout(const Duration(seconds: 5));
 
-    _initialized = true;
+      _initialized = true;
+    } catch (e) {
+      _error = e.toString();
+      debugPrint("Vib3 Engine Initialization Failed: $e");
+    }
     notifyListeners();
   }
 
@@ -167,19 +178,39 @@ class SharedVisualizerWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!engine.isInitialized || engine.textureId == null) {
-      return const SizedBox.shrink();
-    }
-    return SizedBox.expand(
-      child: FittedBox(
-        fit: fit,
-        alignment: alignment,
-        child: SizedBox(
-          width: 100, // Texture size doesn't matter for FittedBox, aspect ratio matters?
-          height: 100, // Assuming square texture from engine
-          child: Texture(textureId: engine.textureId!),
+    // Always render fallback painter at the bottom
+    // If native engine initializes, it renders ON TOP (assuming texture has transparency or covers it)
+    // If native engine fails (black/transparent), fallback remains visible.
+
+    final fallback = SizedBox.expand(
+      child: CustomPaint(
+        painter: FallbackPainter(
+          config: Vib3Config(system: 'quantum'),
+          chaos: 0.5,
+          speed: 0.5,
+          hue: 0.0,
         ),
       ),
+    );
+
+    if (!engine.isInitialized || engine.textureId == null) {
+      return fallback;
+    }
+
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        fallback,
+        FittedBox(
+          fit: fit,
+          alignment: alignment,
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: Texture(textureId: engine.textureId!),
+          ),
+        ),
+      ],
     );
   }
 }
