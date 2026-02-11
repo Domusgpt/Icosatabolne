@@ -1,1 +1,34 @@
-Ok I want to use my shader SDk and make a flutter based app that is a digital version of this board game https://www.geekyhobbies.com/abalone-board-game-review-and-rules/ https://www.aps.org/archives/publications/apsnews/201106/physicshistory.cfm please use my SDK https://github.com/Domusgpt/vib3codeSDKv3.0.0/tree/feature/holographic-exhale-fix-2970824138550486291 give the game haptic feed back, bombastic animations And effects and have the players spheres be circular cutouts that each has a unique version of the Vib3code sdk shader. Use Holographic on side and quantum on the other. Have their geometry and parameter setting react and change with the players positioning and number of balls left compared to their opponent. The losing player being redder and more chaotic with lower density and higher speed in this visualizer setting. Have every user input event and possible moment of gameplay uniquely and smoothly perform visualizer parameter changes to reflect the game play instant. Combine this with R/B chromatic Avberation, moiré glitchy offset RGB frequency lines and boma st vaporware effects and complimentary to the visualizer reactive elements. With holographic vapor wave neoskeunorphic UI design. Have everything work with visual information being convey in the emergency unified visual sound and haptic systems. Use exaggerated bona stic effects and try and give it a woah impactful professional developed vibe# Icosatabolne
+# Icosatabolne
+
+A Flutter-based digital version of Abalone with holographic/quantum visualizer effects powered by `vib3codeSDK`.
+
+## Features
+- **Full Abalone Game Logic**: Hexagonal grid, Sumito pushing, broadside/inline moves, and precise move validation.
+- **Reactive Visualizer**:
+  - **Holographic Theme**: Purple/Cyan palette with geometric stability.
+  - **Quantum Theme**: Blue/Green palette with chaotic flux.
+  - **Dynamic Parameters**: Visuals (chaos, speed, density) react procedurally to game state (winning/losing).
+- **Polished UI**: Glassmorphism, vaporwave aesthetics, and responsive layout.
+- **Cross-Platform**: Builds for Android and Web.
+
+## Build Outputs
+
+### Android APK (GitHub Actions)
+The `Android APK` workflow builds a signed release APK and uploads it as a workflow artifact:
+`build/app/outputs/flutter-apk/app-release.apk`.
+
+### Web (GitHub Pages)
+The `Deploy Web to Pages` workflow builds the Flutter web bundle and publishes it to GitHub Pages.
+Once enabled in repo settings, the site will be available at:
+`https://<org-or-user>.github.io/<repo>/`.
+
+## Development
+Run tests:
+```bash
+flutter test
+```
+
+Build APK:
+```bash
+flutter build apk --release
+```
