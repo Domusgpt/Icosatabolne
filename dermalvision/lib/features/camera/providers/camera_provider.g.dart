@@ -1,26 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_provider.dart';
+part of 'camera_provider.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authControllerHash() => r'7f1b57aec05b72b966a37b6e3fd0c8c47bd6fdc0';
+String _$cameraControllerNotifierHash() =>
+    r'2a449d3b2c7106c5cf35ab7cb8b30d043d382135';
 
-/// See also [AuthController].
-@ProviderFor(AuthController)
-final authControllerProvider =
-    AutoDisposeStreamNotifierProvider<AuthController, User?>.internal(
-  AuthController.new,
-  name: r'authControllerProvider',
+/// See also [CameraControllerNotifier].
+@ProviderFor(CameraControllerNotifier)
+final cameraControllerNotifierProvider = AutoDisposeAsyncNotifierProvider<
+    CameraControllerNotifier, CameraController?>.internal(
+  CameraControllerNotifier.new,
+  name: r'cameraControllerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authControllerHash,
+      : _$cameraControllerNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$AuthController = AutoDisposeStreamNotifier<User?>;
+typedef _$CameraControllerNotifier
+    = AutoDisposeAsyncNotifier<CameraController?>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

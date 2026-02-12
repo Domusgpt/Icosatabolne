@@ -5,6 +5,7 @@ import '../../features/auth/providers/auth_provider.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/camera/presentation/camera_screen.dart';
 
 part 'router.g.dart';
 
@@ -52,6 +53,10 @@ GoRouter router(Ref ref) {
       GoRoute(
         path: '/onboarding',
         builder: (context, state) => const OnboardingScreen(),
+      ),
+      GoRoute(
+        path: '/camera',
+        builder: (context, state) => const CameraScreen(),
       ),
     ],
   );

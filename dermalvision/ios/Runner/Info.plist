@@ -45,5 +45,11 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>DermalVision needs camera access to capture skin monitoring photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>DermalVision needs photo library access to import existing skin photos</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>DermalVision uses the microphone for voice interaction with SkinShurpa</string>
 </dict>
 </plist>
